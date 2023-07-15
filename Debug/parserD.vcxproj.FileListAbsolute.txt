@@ -1,0 +1,2 @@
+D:\C语言\cpp\parserD\Debug\parserD.exe
+D:\C语言\cpp\parserD\Debug\parserD.pdb
