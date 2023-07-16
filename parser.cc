@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     ModelHead modelList;
 
     // Buffers used in parsing:
-    char inName[NameLength], outName[NameLength], buf[BufLength],
+    char inName[NameLength], outName[NameLength], buf[BufLength],myOutName[NameLength],
         buf1[BufLength], buf2[BufLength], buf3[BufLength], nameBuf[NameLength],
         * bufPtr, * charPtr1, * charPtr2;
     int intBuf1, intBuf2, intBuf3, intBuf4, datum = NA, eqNum = NA, specPrintJacMNA = 0;
@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
 
     strcpy(inName, "NOTHING");
     strcpy(outName, "NOTHING");
+    strcpy(myOutName, "NOTHING");
 
     //  processing command line
    /* if ( argc == 1){
@@ -352,8 +353,10 @@ int main(int argc, char* argv[]) {
                 nodePtr = nodePtr1;
             nodePtr1 = nodePtr1->getNext();
         }
-        datum = nodePtr->getNameNum();
+       // datum = nodePtr->getNameNum();
+        datum = 0;   //此处做出了修改，暂时不明白该处理有啥作用
     }
+
     //=================================
     //~> Checking the component list
     //~> Comment this part to omit
@@ -395,7 +398,7 @@ int main(int argc, char* argv[]) {
     nodePtr = nodeList.getNode(0);
     while (nodePtr != NULL) {
         if (nodePtr->getNameNum() != datum) {
-            nodePtr->printNodal(outFile, datum, lastnode);
+            nodePtr->printNodal(outFile, datum , lastnode);
         }
         nodePtr = nodePtr->getNext();
     }
@@ -415,6 +418,7 @@ int main(int argc, char* argv[]) {
             compPtr = compPtr->getNext();
         }
     }
+
 
     // go down the node list and give additional MNA equations
     if (eqType == Modified) {
@@ -451,7 +455,7 @@ int main(int argc, char* argv[]) {
         compPtr2 = compList.getComp(0);
         while (nodePtr2 != NULL) {
             if (nodePtr2->getNameNum() != datum) {
-                compPtr->specialPrintJac(outFile, datum, nodePtr2/**/, lastnode, eqType, compPtr2, &specPrintJacMNA /**/); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+                compPtr->specialPrintJac(outFile, datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA ); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
             }
             nodePtr2 = nodePtr2->getNext();
         }
@@ -483,11 +487,17 @@ int main(int argc, char* argv[]) {
 
 
     // %***************************************************************************************************
-    outfile.open("result.txt", ios::out);
+
+   if (!strcmp(myOutName, "NOTHING")) {
+        strcpy(myOutName, inName);
+        strtok(myOutName, ".");
+        strcat(myOutName, "out.txt");
+    }
+    outfile.open(myOutName, ios::out);
+
 
     nodePtr = nodeList.getNode(0);
 
-    outfile << "Title:* 测试tran的电路" << endl;
     outfile << "datum = " << datum << "\t\t" << "lastnode = " << lastnode << endl;
     Connections* conPtr;
     while (nodePtr != NULL) {
@@ -519,6 +529,51 @@ int main(int argc, char* argv[]) {
 
         nodePtr = nodePtr->getNext();
     }
+
+
+    //输出KCL/KVL方程
+
+    outfile << endl
+        << "%*****************************************************************************" << endl;
+
+
+    // go down the nodal list and have components announce themselves
+    outfile << endl << "  KCL/KVL 方程 : " << endl;
+    nodePtr = nodeList.getNode(0);
+    while (nodePtr != NULL) {
+        if (nodePtr->getNameNum() != datum) {
+            nodePtr->printNodal(outfile, datum, lastnode);
+        }
+        nodePtr = nodePtr->getNext();
+    }
+
+    //go down the component list and give equations for all sources
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        compPtr->specialPrint(outfile, datum);
+        compPtr = compPtr->getNext();
+    }
+
+    //~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+    if (eqType != Modified) {
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            compPtr->printSuperNode(outfile, datum, lastnode);
+            compPtr = compPtr->getNext();
+        }
+    }
+
+
+    // go down the node list and give additional MNA equations
+    if (eqType == Modified) {
+        nodePtr = nodeList.getNode(0);
+        while (nodePtr != NULL) {
+            if (nodePtr->getNameNum() != datum)
+                nodePtr->printMNA(outfile, datum, lastnode);
+            nodePtr = nodePtr->getNext();
+        }
+    }
+
     //%****************************************************************************************************
     return 0;
 }

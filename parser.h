@@ -75,7 +75,7 @@ private:
 	Component* next;
 	CompType type;
 	Connectors con0, con1, con2, con3;
-	int compNum;
+	int compNum;  //同种类型组件的编号
 	double value, temp;
 	Model* model;
 	char name[NameLength];
@@ -101,10 +101,10 @@ public:
 	void printSuperNodal(ofstream& outFile, int datum, int lastnode);
 	/* */
 private:
-	Node* next;
-	int nodeNum, conCount;
+	Node* next;   //链接下一个节点，顺序和nodeList中的顺序保持一致
+	int nodeNum, conCount; //nodeNum 表示nodeList中节点的编号 从1开始，conCount表示该节点链接的边数
 	Connections* conList;
-	int nameNum;
+	int nameNum; //用户对节点的编号顺序
 };
 
 class NodeHead {
@@ -257,8 +257,7 @@ Boolean Component::isCon(int conNum) {
 	return rtVal;
 }
 
-void Component::print(int nodeNum, ofstream& outFile, int datum, int
-	lastnode) {
+void Component::print(int nodeNum, ofstream& outFile, int datum, int lastnode) {
 	switch (type) {
 	case MOSFET:
 		outFile << name
@@ -270,6 +269,15 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int
 
 	case BJT:
 		if ((con0.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+			outFile << "Ic"<<compNum<<" ";
+		}
+		if ((con2.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+			outFile << "Ie"<<compNum<<" ";
+		}
+		if ((con1.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+			outFile << " - Ic" << compNum <<" - "<< "Ie" << compNum << " ";
+		}
+		/*if ((con0.node->getNum() == nodeNum) && (model->getType() == NPN)) {
 			outFile << " (" << name << "IS " << ")*(exp(-"
 				<< name << "N*(";
 			if (con2.node->getNameNum() != datum)
@@ -349,7 +357,7 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int
 			if (con1.node->getNameNum() != datum)
 				outFile << "-X(" << con1.node->getNameNum() << ')';
 			outFile << ")) -1) ";
-		}
+		}*/
 
 		if ((con0.node->getNum() == nodeNum) && (model->getType() == PNP)) {
 			outFile << " (-" << name << "IS " << ")*(exp("
@@ -443,9 +451,9 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int
 
 	case ISource:
 		if (con0.node->getNum() == nodeNum)
-			outFile << " (" << value << ") ";
+			outFile << " (" << name << ") ";
 		else if (con1.node->getNum() == nodeNum)
-			outFile << " (-" << value << ") ";
+			outFile << " (-" << name << ") ";
 		break;
 
 	case Diode:
