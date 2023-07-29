@@ -14,6 +14,9 @@ using namespace std;
 //  declarations:
 const double K = 1.38E-23;
 const double Q = 1.60E-19;
+
+
+double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = {0.0};
 enum CompType {
 	MOSFET, BJT, VSource, ISource, Inductor,
 	Resistor, Diode, Capacitor
@@ -61,12 +64,17 @@ public:
 	int getConVal(int conNum);
 	Boolean isCon(int conNum);
 	void print(int nodeNum, ofstream& outFile, int datum, int lastnode);
+	void printMat(int nodeNum, int datum, int lastnode,double result[],int nameNum);
 	void specialPrint(ofstream& outFile, int datum);
+	void specialPrintMat(int datum,double result[]);
 	void specialPrintJac(ofstream& outFile, int datum, Node* wrt/**/, int lastnode, EquaType eqType, Component* compPtr2, int* specPrintJacMNA /**/);
+	void specialPrintJacMat(int datum, Node* wrt/**/, int lastnode, EquaType eqType, Component* compPtr2, int* specPrintJacMNA /**/, double jacMat[][30]);
 	void printVal(ofstream& outFile);
 	void printJac(int nodeNum, ofstream& outFile, int datum, int wrt, bool MNAflag);
+	void printJacMat(int nodeNum, int datum, int wrt, bool MNAflag, double jacMat[][30], int fristIndex, int scendIndex);
 	/*~> function to print the super node equation (for Nodal equation) */
 	void printSuperNode(ofstream& outFile, int datum, int lastnode);
+	void printSuperNodeMat(int datum, int lastnode, double result[]);
 	/* */
 	Node* getNode(int conNum);
 	int getNodeNum(int conNum);
@@ -93,12 +101,17 @@ public:
 	void connect(int conNumIn, Component* compIn);
 	Node* getNext();
 	void printNodal(ofstream& outFile, int datum, int lastnode);
+	void printNodalMat(int datum, int lastnode,double result[]);
 	void printMNA(ofstream& outFile, int datum, int lastnode);
+	void printMNAMat(int datum, int lastnode, double result[]);
 	void printJac(ofstream& outFile, int datum, Node* wrt, int lastnode, EquaType eqType);
+	void printJacMat(int datum, Node* wrt, int lastnode, EquaType eqType, double jacMat[][30]);
 	void printJacMNA(ofstream& outFile, int datum, Node* wrt, int lastnode);
+	void printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30]);
 	void setNext(Node* nodeIn);
 	/*~>function to print the super node equation (for Nodal equation)*/
 	void printSuperNodal(ofstream& outFile, int datum, int lastnode);
+	void printSuperNodalMat(int datum, int lastnode, double result[], int numIndex);
 	/* */
 private:
 	Node* next;   //链接下一个节点，顺序和nodeList中的顺序保持一致
@@ -269,15 +282,6 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int lastnode) {
 
 	case BJT:
 		if ((con0.node->getNum() == nodeNum) && (model->getType() == NPN)) {
-			outFile << "Ic"<<compNum<<" ";
-		}
-		if ((con2.node->getNum() == nodeNum) && (model->getType() == NPN)) {
-			outFile << "Ie"<<compNum<<" ";
-		}
-		if ((con1.node->getNum() == nodeNum) && (model->getType() == NPN)) {
-			outFile << " - Ic" << compNum <<" - "<< "Ie" << compNum << " ";
-		}
-		/*if ((con0.node->getNum() == nodeNum) && (model->getType() == NPN)) {
 			outFile << " (" << name << "IS " << ")*(exp(-"
 				<< name << "N*(";
 			if (con2.node->getNameNum() != datum)
@@ -357,7 +361,7 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int lastnode) {
 			if (con1.node->getNameNum() != datum)
 				outFile << "-X(" << con1.node->getNameNum() << ')';
 			outFile << ")) -1) ";
-		}*/
+		}
 
 		if ((con0.node->getNum() == nodeNum) && (model->getType() == PNP)) {
 			outFile << " (-" << name << "IS " << ")*(exp("
@@ -1629,3 +1633,1040 @@ Model* ModelHead::getModel(char* nameIn) {
 
 
 
+void Node::printNodalMat(int datum, int lastnode,double result[]) {
+	Connections* conPtr;
+	conPtr = conList;
+	while (conPtr != NULL) { // ~> checks if some 'connection' is connected to any Voltage source. If there is no connections with Voltages source, print the equations.
+		if (conPtr->comp->getType() == VSource)
+			return;
+		conPtr = conPtr->next;
+	}
+	conPtr = conList;
+	while (conPtr->next != NULL) { //~> Using 'conPtr->next' not conPtr to check the end of the while loop
+		conPtr->comp->printMat(nodeNum, datum, lastnode,result,nameNum);
+		conPtr = conPtr->next;
+	}
+	conPtr->comp->printMat(nodeNum,datum, lastnode, result, nameNum);
+
+	return;
+}
+
+
+void Component::printMat(int nodeNum, int datum, int lastnode, double result[], int nameNum) {
+	switch (type) {
+
+
+	case BJT:
+		if ((con0.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] +(- model->getIs()/model->getBr())*(1+model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+		}
+
+		if ((con2.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+
+
+		}
+
+		if ((con1.node->getNum() == nodeNum) && (model->getType() == NPN)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+		}
+
+		if ((con0.node->getNum() == nodeNum) && (model->getType() == PNP)) {
+			
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+		}
+
+		if ((con2.node->getNum() == nodeNum) && (model->getType() == PNP)) {
+			
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+		
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+		}
+
+		if ((con1.node->getNum() == nodeNum) && (model->getType() == PNP)) {
+			
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+			
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+		
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]) - 1);
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-model->getIs() / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+		
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+
+
+		}
+		break;
+
+	case VSource:
+		if (con0.node->getNum() == nodeNum)
+			result[nameNum] = result[nameNum] + nodeValue[lastnode + compNum];
+		else if (con1.node->getNum() == nodeNum)
+			result[nameNum] = result[nameNum] - nodeValue[lastnode + compNum];
+		break;
+
+	case ISource:
+		if (con0.node->getNum() == nodeNum)
+			result[nameNum] = result[nameNum] + value;
+		else if (con1.node->getNum() == nodeNum)
+			result[nameNum] = result[nameNum] - value;
+		break;
+
+	case Diode:
+		if (con0.node->getNum() == nodeNum) {
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+		}
+		else if (con1.node->getNum() == nodeNum) {
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])) - 1);
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) - 1);
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] - model->getIs() * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) - 1);
+			}
+		}
+		break;
+
+	case Resistor:
+		if (con0.node->getNum() == nodeNum) {
+			
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])/value;
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] +  ( nodeValue[con0.node->getNameNum()])/value;
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-nodeValue[con1.node->getNameNum()])/value;
+			}
+		}
+		if (con1.node->getNum() == nodeNum) {
+
+
+			if (con1.node->getNameNum() != datum && con0.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (nodeValue[con1.node->getNameNum()] - nodeValue[con0.node->getNameNum()]) / value;
+			}
+			if (con1.node->getNameNum() != datum && con0.node->getNameNum() == datum) {
+				result[nameNum] = result[nameNum] + (nodeValue[con1.node->getNameNum()]) / value;
+			}
+			if (con1.node->getNameNum() == datum && con0.node->getNameNum() != datum) {
+				result[nameNum] = result[nameNum] + (-nodeValue[con0.node->getNameNum()]) / value;
+			}
+		}
+		break;
+
+	case Capacitor:
+		break;
+
+	case Inductor:
+		if (con0.node->getNum() == nodeNum) {}
+			
+		else if (con1.node->getNum() == nodeNum)
+		{}
+			break;
+	};
+	return;
+}
+
+
+void Component::specialPrintMat(int datum, double result[]) {
+	int eqnum;
+	if (type == VSource) {
+		if (con0.node->getNameNum() == datum) eqnum = con1.node->getNameNum();
+		else eqnum = con0.node->getNameNum();
+
+
+		if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+			result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]) - value;
+		}
+		if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+			result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()]) - value;
+		}
+		if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+			result[eqnum] = result[eqnum] + (-nodeValue[con1.node->getNameNum()]) - value;
+		}
+	}
+	else if (type == Inductor) {
+		//outFile << endl << "F(I" << compNum << ") = ";
+		//outFile << " (";
+		if (con0.node->getNameNum() != datum) {}
+		//	outFile << "X(" << con0.node->getNameNum() << ')';
+		if (con1.node->getNameNum() != datum) {}
+			//outFile << "-X(" << con1.node->getNameNum() << ')';
+		//outFile << ") " << ';' << endl;
+	}
+}
+
+
+void Component::printSuperNodeMat(int datum, int lastnode, double result[]) {
+	if (type == VSource) {
+		if ((con0.node->getNameNum() != datum) && (con1.node->getNameNum() != datum))
+		{ 
+
+			int numIndex = con1.node->getNameNum();
+	
+			con0.node->printSuperNodalMat(datum, lastnode,result, numIndex);
+	
+			con1.node->printSuperNodalMat(datum, lastnode,result, numIndex);
+
+		}
+	}
+	return;
+}
+
+
+void Node::printSuperNodalMat(int datum, int lastnode,double result[], int numIndex) {
+	Connections* conPtr;
+	conPtr = conList;
+	conPtr = conList;
+	while (conPtr->next != NULL) { //~> Using 'conPtr->next' not conPtr to check the end of the while loop
+		if (conPtr->comp->getType() != VSource) {
+			conPtr->comp->printMat(nodeNum,datum, lastnode, result, numIndex);
+		}
+		conPtr = conPtr->next;
+
+	}
+	if (conPtr->comp->getType() != VSource) {
+
+		conPtr->comp->printMat(nodeNum, datum, lastnode, result, numIndex);
+	}
+	return;
+}
+
+void Node::printMNAMat(int datum, int lastnode, double result[]) {
+	Connections* conPtr;
+	int print,numIndex;
+	print = 0;
+	conPtr = conList;
+	while (conPtr != NULL) {
+		if (conPtr->comp->getType() == VSource) {  //~> seeking for a VSource
+			print = 1;
+			
+			numIndex = lastnode + conPtr->comp->getcompNum();
+
+		}
+		conPtr = conPtr->next;
+	}
+	if (print) {
+		conPtr = conList;
+		while (conPtr->next != NULL) {
+			conPtr->comp->printMat(nodeNum, datum, lastnode, result,numIndex);
+			conPtr = conPtr->next;
+		}
+		conPtr->comp->printMat(nodeNum,datum, lastnode,result,numIndex);
+	}
+	return;
+}
+
+
+
+
+
+
+void Node::printJacMat(int datum, Node* wrt, int lastnode, EquaType eqType, double jacMat[][30]) {
+	Connections* conPtr;
+	int fristIndex = 0, scendIndex = 0;
+	conPtr = conList;
+	while (conPtr != NULL) {
+		if (conPtr->comp->getType() == VSource)
+			return;
+		conPtr = conPtr->next;
+	}
+
+	fristIndex = nameNum; scendIndex = wrt->getNameNum();
+	
+	conPtr = conList;
+	while (conPtr->next != NULL) {
+		conPtr->comp->printJacMat(nodeNum, datum, wrt->getNameNum(), FALSE, jacMat, fristIndex, scendIndex);
+		conPtr = conPtr->next;
+	}
+	conPtr->comp->printJacMat(nodeNum, datum, wrt->getNameNum(), FALSE, jacMat, fristIndex, scendIndex);
+	if (eqType == Modified) {
+		conPtr = wrt->conList;
+		while (conPtr != NULL) {
+			if (conPtr->comp->getType() == VSource) {
+				jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
+			}
+			conPtr = conPtr->next;
+		}
+	}
+	return;
+}
+
+
+void Component::printJacMat(int nodeNum, int datum, int wrt, bool MNAflag, double jacMat[][30],int fristIndex,int scendIndex) {
+	//~> MNAflag says if the type of analysis is MNA or NA
+	switch (type) {
+	case MOSFET:
+		cout << "printJac for MOSFETs not implemented" << endl
+			<< "PROGRAM ENDED ABNORMALLY!" << endl;
+		exit(0);
+		break;
+
+	case BJT:
+		if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con0.node->getNameNum() == wrt)) {
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs()* (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs()* (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]) );
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs()* (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])) );
+			}
+		}
+		else if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con2.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) *  (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) *  (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) *  (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+		}
+		else if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con1.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con0.node->getNameNum() == wrt)) {
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con2.node->getNameNum() == wrt)) {
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con1.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con0.node->getNameNum() == wrt)) {
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con2.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == NPN) &&
+			(con1.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp(-(Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+
+		else if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con0.node->getNameNum() == wrt)) {
+		
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con2.node->getNameNum() == wrt)) {
+	
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con0.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con1.node->getNameNum() == wrt)) {
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+	
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con0.node->getNameNum() == wrt)) {
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con2.node->getNameNum() == wrt)) {
+
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con2.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con1.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con0.node->getNameNum() == wrt)) {
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con2.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+	
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if ((con1.node->getNum() == nodeNum) &&
+			(model->getType() == PNP) &&
+			(con1.node->getNameNum() == wrt)) {
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+			
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBr()) * (1 + model->getBr()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		
+
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (nodeValue[con2.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con2.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * nodeValue[con2.node->getNameNum()]));
+			}
+			if (con2.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp())) / model->getBf()) * (1 + model->getBf()) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+			
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else
+			jacMat[fristIndex][scendIndex]= jacMat[fristIndex][scendIndex]+0;
+		break;
+
+		//           NOTE:  Assuming DC voltages, the derivatives are all zero
+	case VSource:
+		if (((con0.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt) /*~>*/ && (MNAflag == FALSE)) ||
+			((con1.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt) /*~>*/ && (MNAflag == FALSE)))
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 1;
+		else if (((con0.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt) /*~>*/ && (MNAflag == FALSE)) ||
+			((con1.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt) /*~>*/ && (MNAflag == FALSE)))
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - 1;
+		else
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+		break;
+
+	case ISource:
+		jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+		break;
+
+	case Diode:
+		if (((con0.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt)) ||
+			((con1.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt))) {
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else if (((con0.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt)) ||
+			((con1.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt))) {
+
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()])));
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * nodeValue[con0.node->getNameNum()]));
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + (-model->getIs() * (Q / (K * model->getTemp()))) * (exp((Q / (K * model->getTemp())) * (-nodeValue[con1.node->getNameNum()])));
+			}
+		}
+		else
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+		break;
+
+	case Resistor:
+		if (((con0.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt)) ||
+			((con1.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt)))
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 1 / value;
+
+		else if (((con0.node->getNum() == nodeNum) && (con1.node->getNameNum() == wrt)) ||
+			((con1.node->getNum() == nodeNum) && (con0.node->getNameNum() == wrt)))
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - 1 / value;
+		else
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+		break;
+
+	case Capacitor:
+		jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+		break;
+
+	case Inductor:
+		cerr << "This section is not completed" << endl
+			<< "PROGRAM ENDED ABNORMALLY!" << endl;
+		exit(0);
+		break;
+	};
+	return;
+}
+
+
+void Component::specialPrintJacMat(int datum, Node* wrt /**/, int lastnode, EquaType eqType, Component* compPtr2, int* specPrintJacMNA /**/,double jacMat[][30]) {
+	int eqnum;
+	if (type == VSource) {
+		if (con0.node->getNameNum() == datum)  eqnum = con1.node->getNameNum();
+		else  eqnum = con0.node->getNameNum();
+
+		if (con0.node->getNameNum() == wrt->getNameNum())
+			jacMat[eqnum][wrt->getNameNum()] = jacMat[eqnum][wrt->getNameNum()] + 1;
+
+		else if (con1.node->getNameNum() == wrt->getNameNum())
+			jacMat[eqnum][wrt->getNameNum()] = jacMat[eqnum][wrt->getNameNum()] - 1;
+		else
+			jacMat[eqnum][wrt->getNameNum()] = jacMat[eqnum][wrt->getNameNum()] + 0;
+		//==================================================
+		//~> Printing the jacobians of each voltage source with respect to each unknown current (MNEqs)
+		if ((eqType == Modified) && (*specPrintJacMNA == 0)) {
+			while (compPtr2 != NULL) {
+				if (compPtr2->getType() == VSource) {
+					jacMat[eqnum][lastnode + compPtr2->getcompNum()] = 0;
+				}
+				compPtr2 = compPtr2->getNext();
+			}
+			(*specPrintJacMNA) = 1;
+
+		}
+		//=====================================================
+
+	}
+	else if (type == Inductor) {
+		//outFile << endl << "JAC(I" << compNum << ", " << wrt->getNameNum() << ") = ";
+		if (con0.node->getNameNum() == wrt->getNameNum()){}
+			//outFile << "1";
+		else if (con1.node->getNameNum() == wrt->getNameNum()){}
+			//outFile << "-1";
+		else{}
+			//outFile << "0";
+		//outFile << ';' << endl;
+	}
+}
+
+
+
+void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30]) {
+	Connections* conPtr;
+	int print, val,fristIndex,scendIndex;
+	/* ~>*/
+	bool MNAflagFALSE = FALSE; //Used to indicate if it is been printed JacMNA
+	bool MNAflagTRUE = TRUE;
+	/* <~*/
+	print = 0;
+	conPtr = conList;
+	while (conPtr != NULL) {
+		if (conPtr->comp->getType() == VSource) {
+			print = 1;
+			val = conPtr->comp->getcompNum();
+			fristIndex = lastnode + val;
+			scendIndex = wrt->getNameNum();
+		}
+		conPtr = conPtr->next;
+	}
+	if (print) {
+		conPtr = conList;
+		while (conPtr->next != NULL) {
+			conPtr->comp->printJacMat(nodeNum,datum, wrt->getNameNum(), MNAflagTRUE, jacMat, fristIndex, scendIndex);
+			conPtr = conPtr->next;
+		}
+		conPtr->comp->printJacMat(nodeNum, datum, wrt->getNameNum(), MNAflagTRUE, jacMat, fristIndex, scendIndex);
+		conPtr = wrt->conList;
+		while (conPtr != NULL) {
+			if (conPtr->comp->getType() == VSource) {
+
+				if (conPtr->comp->getcompNum() == val)
+					jacMat[lastnode + val][lastnode + conPtr->comp->getcompNum()] = 1;
+				else 
+					jacMat[lastnode + val][lastnode + conPtr->comp->getcompNum()] = 0;
+			}
+			conPtr = conPtr->next;
+		}
+	}
+	return;
+}
