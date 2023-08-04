@@ -16,7 +16,17 @@ const double K = 1.38E-23;
 const double Q = 1.60E-19;
 
 
-double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = {0.0};
+double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = {0.0};
+int Vsoure[10][4]={0};    /*  
+						   Vsoure[x][0]; 表示V(x),是否链接两个非零节点
+						   Vsoure[x][1]; 表示V(x),的F(x)是否已经输出一次
+						   Vsoure[x][2]; 表示V(x),的第二个链接节点的nameNum
+						   Vsoure[x][3]; 表示V(x),的jac矩阵是否已经输出一次
+
+						  */
+
+
+
 enum CompType {
 	MOSFET, BJT, VSource, ISource, Inductor,
 	Resistor, Diode, Capacitor
@@ -38,7 +48,7 @@ class ModelHead;
 struct Connectors {
 	Flag flag;
 	Node* node;
-	int conNum;
+	int conNum;   //用户给节点的编号
 };
 
 struct Connections {
@@ -83,7 +93,7 @@ private:
 	Component* next;
 	CompType type;
 	Connectors con0, con1, con2, con3;
-	int compNum;  //同种类型组件的编号
+	int compNum;                                                            //同种类型组件的编号
 	double value, temp;
 	Model* model;
 	char name[NameLength];
@@ -114,10 +124,10 @@ public:
 	void printSuperNodalMat(int datum, int lastnode, double result[], int numIndex);
 	/* */
 private:
-	Node* next;   //链接下一个节点，顺序和nodeList中的顺序保持一致
-	int nodeNum, conCount; //nodeNum 表示nodeList中节点的编号 从1开始，conCount表示该节点链接的边数
+	Node* next;                                              //链接下一个节点，顺序和nodeList中的顺序保持一致
+	int nodeNum, conCount;                                   //nodeNum 表示nodeList中节点的编号 从1开始，conCount表示该节点链接的边数
 	Connections* conList;
-	int nameNum; //用户对节点的编号顺序
+	int nameNum;                                             //用户对节点的编号顺序
 };
 
 class NodeHead {
@@ -559,9 +569,11 @@ void Component::specialPrintJac(ofstream& outFile, int datum, Node* wrt /**/, in
 		if ((eqType == Modified) && (*specPrintJacMNA == 0)) {
 			while (compPtr2 != NULL) {
 				if (compPtr2->getType() == VSource) {
+
 					outFile << endl << "JAC(" << eqnum << ", ";
 					outFile << lastnode + compPtr2->getcompNum() << ") = 0; ";
 					outFile << endl;
+					
 				}
 				compPtr2 = compPtr2->getNext();
 			}
@@ -1237,9 +1249,32 @@ void Node::printMNA(ofstream& outFile, int datum, int lastnode) {
 	conPtr = conList;
 	while (conPtr != NULL) {
 		if (conPtr->comp->getType() == VSource) {  //~> seeking for a VSource
-			print = 1;
-			outFile << endl;
-			outFile << "F(" << lastnode + conPtr->comp->getcompNum() << ")=";
+			if (Vsoure[conPtr->comp->getcompNum()][0] == 0) {
+				print = 1;
+				outFile << endl;
+				outFile << "F(" << lastnode + conPtr->comp->getcompNum() << ")=";
+				
+			}
+			else {
+				if (Vsoure[conPtr->comp->getcompNum()][1] == 0) {
+					print = 1;
+					outFile << endl;
+					outFile << "F(" << Vsoure[conPtr->comp->getcompNum()][2] << ")=";
+					Vsoure[conPtr->comp->getcompNum()][1] = 1;
+					
+					
+					
+					
+					
+				}
+				else {
+					print = 1;
+					outFile << endl;
+					outFile << "F(" << lastnode + conPtr->comp->getcompNum() << ")=";
+					Vsoure[conPtr->comp->getcompNum()][1] = 0;
+				}
+			}
+			
 		}
 		conPtr = conPtr->next;
 	}
@@ -1277,9 +1312,26 @@ void Node::printJac(ofstream& outFile, int datum, Node* wrt, int lastnode, EquaT
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
-				outFile << endl << "JAC(" << nameNum << ", ";
-				outFile << lastnode + conPtr->comp->getcompNum() << ") = 0; ";
-				outFile << endl;
+				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
+						outFile << endl << "JAC(" << nameNum << ", ";
+						outFile << lastnode + conPtr->comp->getcompNum() << ") = 0; ";
+						outFile << endl;
+						
+						Vsoure[conPtr->comp->getcompNum()][3] = 1;
+						
+					}
+					else {
+						Vsoure[conPtr->comp->getcompNum()][3] = 0;
+					}
+				}
+				else {
+					outFile << endl << "JAC(" << nameNum << ", ";
+					outFile << lastnode + conPtr->comp->getcompNum() << ") = 0; ";
+					outFile << endl;
+				}
+				
+				
 			}
 			conPtr = conPtr->next;
 		}
@@ -1289,7 +1341,7 @@ void Node::printJac(ofstream& outFile, int datum, Node* wrt, int lastnode, EquaT
 
 void Node::printJacMNA(ofstream& outFile, int datum, Node* wrt, int lastnode) {
 	Connections* conPtr;
-	int print, val;
+	int print, val, tempVal;
 	/* ~>*/
 	bool MNAflagFALSE = FALSE; //Used to indicate if it is been printed JacMNA
 	bool MNAflagTRUE = TRUE;
@@ -1298,10 +1350,34 @@ void Node::printJacMNA(ofstream& outFile, int datum, Node* wrt, int lastnode) {
 	conPtr = conList;
 	while (conPtr != NULL) {
 		if (conPtr->comp->getType() == VSource) {
-			print = 1;
-			val = conPtr->comp->getcompNum();
-			outFile << endl << "JAC(" << lastnode + val;
-			outFile << ", " << wrt->getNameNum() << ") = ";
+
+			if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+				if (conPtr->comp->getConVal(0) == nameNum) {
+					print = 1;
+					val = conPtr->comp->getcompNum();
+					outFile << endl << "JAC(" << nameNum;
+					outFile << ", " << wrt->getNameNum() << ") = ";
+					tempVal = nameNum;
+				}
+				else {
+					print = 1;
+					val = conPtr->comp->getcompNum();
+					outFile << endl << "JAC(" << lastnode + val;
+					outFile << ", " << wrt->getNameNum() << ") = ";
+					tempVal = lastnode + val;
+				}
+			}
+			else {
+				print = 1;
+				val = conPtr->comp->getcompNum();
+				outFile << endl << "JAC(" << lastnode + val;
+				outFile << ", " << wrt->getNameNum() << ") = ";
+				tempVal = lastnode + val;
+			}
+			
+
+
+
 		}
 		conPtr = conPtr->next;
 	}
@@ -1317,11 +1393,36 @@ void Node::printJacMNA(ofstream& outFile, int datum, Node* wrt, int lastnode) {
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
-				outFile << endl << "JAC(" << lastnode + val << ", ";
-				outFile << lastnode + conPtr->comp->getcompNum() << ") = ";
-				if (conPtr->comp->getcompNum() == val)  outFile << "1;";
-				else outFile << "0;";
-				outFile << endl;
+	
+				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
+						outFile << endl << "JAC(" << tempVal << ", ";
+						outFile << lastnode + conPtr->comp->getcompNum() << ") = ";
+						if (conPtr->comp->getcompNum() == val)  outFile << "1;";
+						else outFile << "0;";
+						outFile << endl;
+						if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+							Vsoure[conPtr->comp->getcompNum()][3] = 1;
+
+
+						}
+
+					}
+					else {
+						Vsoure[conPtr->comp->getcompNum()][3] = 0;
+
+					}
+				}
+				else {
+					outFile << endl << "JAC(" << tempVal << ", ";
+					outFile << lastnode + conPtr->comp->getcompNum() << ") = ";
+					if (conPtr->comp->getcompNum() == val)  outFile << "1;";
+					else outFile << "0;";
+					outFile << endl;
+				}
+				
+				
+				
 			}
 			conPtr = conPtr->next;
 		}
@@ -2030,11 +2131,29 @@ void Node::printMNAMat(int datum, int lastnode, double result[]) {
 	conPtr = conList;
 	while (conPtr != NULL) {
 		if (conPtr->comp->getType() == VSource) {  //~> seeking for a VSource
-			print = 1;
-			
-			numIndex = lastnode + conPtr->comp->getcompNum();
+
+			if (Vsoure[conPtr->comp->getcompNum()][0] == 0) {
+				print = 1;
+				numIndex = lastnode + conPtr->comp->getcompNum();
+
+			}
+			else {
+				if (Vsoure[conPtr->comp->getcompNum()][1] == 0) {
+					print = 1;
+					numIndex = Vsoure[conPtr->comp->getcompNum()][2];
+					Vsoure[conPtr->comp->getcompNum()][1] = 1;
+					
+				}
+				else {
+					print = 1;
+					numIndex = lastnode + conPtr->comp->getcompNum();
+					Vsoure[conPtr->comp->getcompNum()][1] = 0;
+				}
+			}
 
 		}
+
+
 		conPtr = conPtr->next;
 	}
 	if (print) {
@@ -2075,7 +2194,21 @@ void Node::printJacMat(int datum, Node* wrt, int lastnode, EquaType eqType, doub
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
-				jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
+				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
+						jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
+						
+						Vsoure[conPtr->comp->getcompNum()][3] = 1;
+						
+					}
+					else {
+						Vsoure[conPtr->comp->getcompNum()][3] = 0;
+					}
+				}
+				else {
+					jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
+				}
+				
 			}
 			conPtr = conPtr->next;
 		}
@@ -2633,7 +2766,7 @@ void Component::specialPrintJacMat(int datum, Node* wrt /**/, int lastnode, Equa
 
 void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30]) {
 	Connections* conPtr;
-	int print, val,fristIndex,scendIndex;
+	int print, val,fristIndex,scendIndex,tempVal;
 	/* ~>*/
 	bool MNAflagFALSE = FALSE; //Used to indicate if it is been printed JacMNA
 	bool MNAflagTRUE = TRUE;
@@ -2642,10 +2775,34 @@ void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30
 	conPtr = conList;
 	while (conPtr != NULL) {
 		if (conPtr->comp->getType() == VSource) {
-			print = 1;
-			val = conPtr->comp->getcompNum();
-			fristIndex = lastnode + val;
-			scendIndex = wrt->getNameNum();
+
+			if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+				if (conPtr->comp->getConVal(0) == nameNum) {
+					print = 1;
+					val = conPtr->comp->getcompNum();
+					fristIndex = nameNum;
+					scendIndex = wrt->getNameNum();
+					tempVal = nameNum;
+				}
+				else {
+
+					print = 1;
+
+					val = conPtr->comp->getcompNum();
+					fristIndex = lastnode + val;
+					scendIndex = wrt->getNameNum();
+					tempVal = lastnode + val;
+				}
+			}
+			else {
+				print = 1;
+				val = conPtr->comp->getcompNum();
+				fristIndex = lastnode + val;
+				scendIndex = wrt->getNameNum();
+				tempVal = lastnode + val;
+			}
+			
+
 		}
 		conPtr = conPtr->next;
 	}
@@ -2659,11 +2816,31 @@ void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
+				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
+						if (conPtr->comp->getcompNum() == val)
+							jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 1;
+						else
+							jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 0;
+						if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+							Vsoure[conPtr->comp->getcompNum()][3] = 1;
 
-				if (conPtr->comp->getcompNum() == val)
-					jacMat[lastnode + val][lastnode + conPtr->comp->getcompNum()] = 1;
-				else 
-					jacMat[lastnode + val][lastnode + conPtr->comp->getcompNum()] = 0;
+
+						}
+
+					}
+					else {
+						Vsoure[conPtr->comp->getcompNum()][3] = 0;
+
+					}
+				}
+				else {
+					if (conPtr->comp->getcompNum() == val)
+						jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 1;
+					else
+						jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 0;
+				}
+				
 			}
 			conPtr = conPtr->next;
 		}
