@@ -16,7 +16,7 @@ const double K = 1.38E-23;
 const double Q = 1.60E-19;
 
 
-double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = {0.0};
+double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = { 0.0 }, preU = 0.0, stepSize = 0.0, stopTime = 0.0;
 int Vsoure[10][4]={0};    /*  
 						   Vsoure[x][0]; 表示V(x),是否链接两个非零节点
 						   Vsoure[x][1]; 表示V(x),的F(x)是否已经输出一次
@@ -35,7 +35,7 @@ enum TranType { NMOS, PMOS, NPN, PNP };
 enum Flag { UNSET, SET };
 enum Boolean { FALSE, TRUE };
 enum EquaType { Nodal, Modified };
-int mCount = 0, bCount = 0, vSCount = 0, iSCount = 0, rCount = 0, iCount = 0, dCount = 0, cCount = 0;
+int mCount = 0, bCount = 0, vSCount = 0, iSCount = 0, rCount = 0, iCount = 0, dCount = 0, cCount = 0, isTran = 0, stepNum = 0;
 const int NameLength = 80, BufLength = 300, NA = -1;
 
 class Component;
@@ -2047,7 +2047,13 @@ void Component::printMat(int nodeNum, int datum, int lastnode, double result[], 
 		break;
 
 	case Capacitor:
-		break;
+		if (!isTran) {
+			break;
+		}
+		else {
+			result[nameNum] = result[nameNum] + value / stepSize * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()] - preU);
+			break;
+		}
 
 	case Inductor:
 		if (con0.node->getNum() == nodeNum) {}
@@ -2709,8 +2715,17 @@ void Component::printJacMat(int nodeNum, int datum, int wrt, bool MNAflag, doubl
 		break;
 
 	case Capacitor:
-		jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
-		break;
+		if (!isTran) {
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+			break;
+		}
+		else {
+			if (con0.node->getNameNum() == wrt) {
+				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + value / stepSize;
+			}
+			break;
+		}
+		
 
 	case Inductor:
 		cerr << "This section is not completed" << endl
