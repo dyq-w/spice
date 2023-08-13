@@ -18,3 +18,7 @@ https://www.bilibili.com/video/BV18j41197tM/?spm_id_from=333.999.0.0&vd_source=e
 ### 第六次作业代码演示
 
 https://www.bilibili.com/video/BV1Fx4y197Kc/?spm_id_from=333.999.0.0&vd_source=e99f74679b19b589b6451f67b157ec4b
+
+### 瞬态分析代码结果演示
+
+https://www.bilibili.com/video/BV1MN411z7ZK/?vd_source=e99f74679b19b589b6451f67b157ec4b
