@@ -1,8 +1,9 @@
 ﻿  parser.cc
-D:\C语言\cpp\parserD\parser.cc(35,11): warning C4101: “bufPtr”: 未引用的局部变量
-D:\C语言\cpp\parserD\parser.cc(211,10): warning C4101: “model_str”: 未引用的局部变量
-D:\C语言\cpp\parserD\parser.cc(35,33): warning C4101: “charPtr2”: 未引用的局部变量
+D:\C语言\cpp\parserD\parser.cc(36,11): warning C4101: “bufPtr”: 未引用的局部变量
+D:\C语言\cpp\parserD\parser.cc(173,10): warning C4101: “model_str”: 未引用的局部变量
+D:\C语言\cpp\parserD\parser.cc(36,33): warning C4101: “charPtr2”: 未引用的局部变量
+D:\C语言\cpp\parserD\parser.cc(1629,36): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+D:\C语言\cpp\parserD\parser.h(1147): warning C4715: “Component::getNode”: 不是所有的控件路径都返回值
 D:\C语言\cpp\parserD\parser.h(1160): warning C4715: “Component::getNodeNum”: 不是所有的控件路径都返回值
 D:\C语言\cpp\parserD\parser.h(1647): warning C4715: “CompHead::getCount”: 不是所有的控件路径都返回值
-D:\C语言\cpp\parserD\parser.h(1147): warning C4715: “Component::getNode”: 不是所有的控件路径都返回值
   parserD.vcxproj -> D:\C语言\cpp\parserD\Debug\parserD.exe

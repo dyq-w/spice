@@ -14,7 +14,8 @@ int portNum(Component* comPtr, Node* nodePtr); //obtain port number
 bool isAccurate(double result[], int num, double accurateValue);
 void Fun(double A[][30], double x[], double b[], int n);
 void convertArray(double jacMat[][30], double A[][30], double result[], double y[], int number);
-void NR_Iterations(double jacMat[][30], double result[], double minDert[], int number, int& count, double accurateValue, int datum, int lastnode, bool Homotopy = false, double t = 0);
+void NR_Iterations(double jacMat[][30], double result[], double minDert[], int number, int& count, 
+    double accurateValue, int datum, int lastnode, bool Homotopy_NeW = false, bool Homotopy = false, double t = 0);
 
 
 
@@ -46,45 +47,6 @@ int main(int argc, char* argv[]) {
     strcpy(outName, "NOTHING");
     strcpy(myOutName, "NOTHING");
 
-    //  processing command line
-   /* if ( argc == 1){
-      cerr << "USAGE:  parser -f FILENAME <-d DATUM> <-e EQUATION-TYPE> <-o OUTPUT_FILE >" << endl;
-      exit(0);
-    }
-    else {
-      for( int c=1; c < argc; c++ ){
-        if( (c==1) && isalpha( *argv[c] ) )
-              strcpy( inName, argv[c] );
-        else if( !strcmp( argv[c], "-f" ) ){
-      if( (c+1) > argc ){
-        cerr << "USAGE:  parser -f FILENAME <-d DATUM> <-e EQUATION-TYPE> <-o OUTPUT_FILE>" << endl;
-        exit(0);
-      }
-      strcpy( inName, argv[c+1] );
-        }
-        else if( !strcmp( argv[c], "-d" ) ){
-      if( (c+1) > argc ){
-        cerr << "USAGE:  parser -f FILENAME <-d DATUM> <-e EQUATION-TYPE> <-o OUTPUT_FILE>" << endl;
-        exit(0);
-      }
-      datum = atoi( argv[c+1] );
-        }
-        else if( !strcmp( argv[c], "-e" ) ){
-      if( (c+1) > argc ){
-        cerr << "USAGE:  parser -f FILENAME <-d DATUM> <-e EQUATION-TYPE> <-o OUTPUT_FILE>" << endl;
-        exit(0);
-      }
-      eqNum = atoi( argv[c+1] );
-        }
-        else if( !strcmp( argv[c], "-o" ) ){
-      if( (c+1) > argc ){
-        cerr << "USAGE:  parser -f FILENAME <-d DATUM> <-e EQUATION-TYPE> <-o OUTPUT_FILE>" << endl;
-        exit(0);
-      }
-      strcpy( outName, argv[c+1] );
-        }
-      }
-    }*/
 
     // process equation types:
     if (eqNum == NA) {
@@ -628,8 +590,10 @@ int main(int argc, char* argv[]) {
     cout << "*************************************" << endl;
 
     cout << "   1、N-R" << endl;
-    cout << "   2、Homotopy" << endl;
-    cout << "   3、Transient" << endl;
+    cout << "   2、Homotopy-Newton" << endl;
+    cout << "   3、Homotopy" << endl;
+    cout << "   4、Transient" << endl;
+    cout << "   5、P_Transient" << endl;
 
     cout << "*************************************" << endl;
 
@@ -637,6 +601,8 @@ int main(int argc, char* argv[]) {
 
     if (choose == 1) {
         //以下实现矩阵的运算
+
+        cout << endl << endl << "----------------Using N-R Method to Solve Circuit Equations--------------------------" << endl << endl;
 
         int number = 0;
 
@@ -763,9 +729,9 @@ int main(int argc, char* argv[]) {
 else if (choose == 2) {
 
 
-//------------------------同伦法求解电路方程
+//------------------------同伦法求解电路方程------------------------------
 
-cout << endl << endl << "----------------Using Homotopy Method to Solve Circuit Equations--------------------------" << endl << endl;
+cout << endl << endl << "----------------Using Homotopy-Newton Method to Solve Circuit Equations--------------------------" << endl << endl;
 double stepSize;
 int number = 0;
 
@@ -991,12 +957,281 @@ for (int i = 0; i < number; i++) {
 
 
 
-
-
-
 else if (choose == 3) {
+/*
+    # 同伦法的公式      H(x,t)=tf(x)+(1-t)G(x-a)
+    # 默认G为对角矩阵，且对角线的值为2.
+    # 默认  a = 0.9
+    
+*/
+
+cout << endl << endl << "----------------Using Homotopy Method to Solve Circuit Equations--------------------------" << endl << endl;
+double stepSize;
+int number = 0;
+
+
+cout << "Please enter the initial data number：" << endl;
+cin >> number;
+double t = 0;
+cout << "Please enter the step size:" << endl;
+cin >> stepSize;
+cout << "Please enter the initial data value:" << endl;
+for (int i = 0; i < number; i++) {
+    cin >> nodeValue[i + 1];
+}
+int count = 1;
+double accurateValue = 1000;
+
+//第一次迭代求解，此时t=0。
+double sum = 0;
+
+
+t = t + stepSize;
+
+
+//第二次迭代
+
+
+//求H(x),存于result
+
+nodePtr = nodeList.getNode(0);
+while (nodePtr != NULL) {
+    if (nodePtr->getNameNum() != datum) {
+        nodePtr->printNodalMat(datum, lastnode, result);
+    }
+    nodePtr = nodePtr->getNext();
+}
+
+compPtr = compList.getComp(0);
+while (compPtr != NULL) {
+    compPtr->specialPrintMat(datum, result);
+    compPtr = compPtr->getNext();
+}
+
+
+//~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+if (eqType != Modified) {
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        compPtr->printSuperNodeMat(datum, lastnode, result);
+        compPtr = compPtr->getNext();
+    }
+}
+
+
+// go down the node list and give additional MNA equations
+if (eqType == Modified) {
+    nodePtr = nodeList.getNode(0);
+    while (nodePtr != NULL) {
+        if (nodePtr->getNameNum() != datum)
+            nodePtr->printMNAMat(datum, lastnode, result);
+        nodePtr = nodePtr->getNext();
+    }
+}
+
+//求jac矩阵
+
+nodePtr1 = nodeList.getNode(0);
+while (nodePtr1 != NULL) {
+    if (nodePtr1->getNameNum() != datum) {
+        nodePtr2 = nodeList.getNode(0);
+        while (nodePtr2 != NULL) {
+            if (nodePtr2->getNameNum() != datum) {
+                nodePtr1->printJacMat(datum, nodePtr2, lastnode, eqType, jacMat);
+            }
+            nodePtr2 = nodePtr2->getNext();
+        }
+    }
+    nodePtr1 = nodePtr1->getNext();
+}
+
+// go down the component list and give equations for all sources
+compPtr = compList.getComp(0);
+while (compPtr != NULL) {
+    nodePtr2 = nodeList.getNode(0);
+    compPtr2 = compList.getComp(0);
+    while (nodePtr2 != NULL) {
+        if (nodePtr2->getNameNum() != datum) {
+            compPtr->specialPrintJacMat(datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA, jacMat); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+        }
+        nodePtr2 = nodePtr2->getNext();
+    }
+    specPrintJacMNA = 0;
+    compPtr = compPtr->getNext();
+}
+
+
+
+
+// print the Jacobians for the additional MNA equations
+if (eqType == Modified) {
+    nodePtr1 = nodeList.getNode(0);
+    while (nodePtr1 != NULL) {
+        if (nodePtr1->getNameNum() != datum) {
+            nodePtr2 = nodeList.getNode(0);
+            while (nodePtr2 != NULL) {
+                if (nodePtr2->getNameNum() != datum)
+                    nodePtr1->printJacMNAMat(datum, nodePtr2, lastnode, jacMat);
+                nodePtr2 = nodePtr2->getNext();
+            }
+        }
+        nodePtr1 = nodePtr1->getNext();
+    }
+}
+
+//对result 和 jacmat 进行处理
+
+sum = 0;
+for (int i = 1; i <= number; i++) {
+    sum += nodeValue[i];
+}
+
+for (int i = 1; i <= number; i++) {
+    result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
+}
+
+for (int i = 1; i <= number; i++) {
+    for (int j = 1; j <= number; j++) {
+        jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+    }
+}
+
+
+while (t < 1.0) {
+    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode, false, true, t);
+    t += stepSize;
+
+    nodePtr = nodeList.getNode(0);
+    while (nodePtr != NULL) {
+        if (nodePtr->getNameNum() != datum) {
+            nodePtr->printNodalMat(datum, lastnode, result);
+        }
+        nodePtr = nodePtr->getNext();
+    }
+
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        compPtr->specialPrintMat(datum, result);
+        compPtr = compPtr->getNext();
+    }
+
+
+    //~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+    if (eqType != Modified) {
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            compPtr->printSuperNodeMat(datum, lastnode, result);
+            compPtr = compPtr->getNext();
+        }
+    }
+
+
+    // go down the node list and give additional MNA equations
+    if (eqType == Modified) {
+        nodePtr = nodeList.getNode(0);
+        while (nodePtr != NULL) {
+            if (nodePtr->getNameNum() != datum)
+                nodePtr->printMNAMat(datum, lastnode, result);
+            nodePtr = nodePtr->getNext();
+        }
+    }
+
+    //求jac矩阵
+
+    nodePtr1 = nodeList.getNode(0);
+    while (nodePtr1 != NULL) {
+        if (nodePtr1->getNameNum() != datum) {
+            nodePtr2 = nodeList.getNode(0);
+            while (nodePtr2 != NULL) {
+                if (nodePtr2->getNameNum() != datum) {
+                    nodePtr1->printJacMat(datum, nodePtr2, lastnode, eqType, jacMat);
+                }
+                nodePtr2 = nodePtr2->getNext();
+            }
+        }
+        nodePtr1 = nodePtr1->getNext();
+    }
+
+    // go down the component list and give equations for all sources
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        nodePtr2 = nodeList.getNode(0);
+        compPtr2 = compList.getComp(0);
+        while (nodePtr2 != NULL) {
+            if (nodePtr2->getNameNum() != datum) {
+                compPtr->specialPrintJacMat(datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA, jacMat); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+            }
+            nodePtr2 = nodePtr2->getNext();
+        }
+        specPrintJacMNA = 0;
+        compPtr = compPtr->getNext();
+    }
+
+
+
+
+    // print the Jacobians for the additional MNA equations
+    if (eqType == Modified) {
+        nodePtr1 = nodeList.getNode(0);
+        while (nodePtr1 != NULL) {
+            if (nodePtr1->getNameNum() != datum) {
+                nodePtr2 = nodeList.getNode(0);
+                while (nodePtr2 != NULL) {
+                    if (nodePtr2->getNameNum() != datum)
+                        nodePtr1->printJacMNAMat(datum, nodePtr2, lastnode, jacMat);
+                    nodePtr2 = nodePtr2->getNext();
+                }
+            }
+            nodePtr1 = nodePtr1->getNext();
+        }
+    }
+    if (t < 1.0) {
+        sum = 0;
+        for (int i = 1; i <= number; i++) {
+            sum += nodeValue[i];
+        }
+
+        for (int i = 1; i <= number; i++) {
+            result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
+        }
+
+        for (int i = 1; i <= number; i++) {
+            for (int j = 1; j <= number; j++) {
+                jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+            }
+        }
+    }
+
+
+}
+NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+
+cout << endl;
+for (int i = 0; i < number; i++) {
+    cout << "▲x(" << i + 1 << ") =    " << minDert[i] << endl;
+}
+cout << endl;
+cout << "the result:" << endl;
+for (int i = 0; i < number; i++) {
+    cout << "x(" << i + 1 << ") =    " << nodeValue[i + 1] << endl;
+}
+
+
+
+
+
+
+
+
+
+}
+
+
+else if (choose == 4) {
 
 // -------------------------------Tran---------------------------------------------------
+
+cout << endl << endl << "----------------Using Tran Method to Solve Circuit Equations--------------------------" << endl << endl;
 
 
 outfile.open("tran.txt", ios::out);
@@ -1099,10 +1334,147 @@ for (double i = stepSize; i < stopTime+stepSize; i = i + stepSize) {
         }
     }
     
-    preU = nodeValue[2];
+    for (int i = 0; i <= number; i++) {
+        preU[i] = nodeValue[i];
+    }
     NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
 
     outfile << "Time:" << i << "    voltage:" << nodeValue[2] << endl;
+}
+
+outfile.close();
+
+    }
+else if (choose == 5) {
+
+
+//----------------------------P_Tran-----------------------------------------------------------
+
+cout << endl << endl << "----------------Using P-Tran Method to Solve Circuit Equations--------------------------" << endl << endl;
+
+outfile.open("ptran.txt", ios::out);
+int number = 0;
+isTran = 1;      //--------------------
+
+cout << "please input data numbers:" << endl;
+cin >> number;
+for (int i = 1; i <= number; i++) {
+    nodeValue[i] = 0;
+}
+
+int count = 1;
+double accurateValue=0.0;
+
+cout << "please input required accuracy:" << endl;
+cin >> accurateValue;
+
+for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
+    stepNum++;
+    nodePtr = nodeList.getNode(0);
+    while (nodePtr != NULL) {
+        if (nodePtr->getNameNum() != datum) {
+            nodePtr->printNodalMat(datum, lastnode, result);
+        }
+        nodePtr = nodePtr->getNext();
+    }
+
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        compPtr->specialPrintMat(datum, result);
+        compPtr = compPtr->getNext();
+    }
+
+
+    //~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+    if (eqType != Modified) {
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            compPtr->printSuperNodeMat(datum, lastnode, result);
+            compPtr = compPtr->getNext();
+        }
+    }
+
+
+    // go down the node list and give additional MNA equations
+    if (eqType == Modified) {
+        nodePtr = nodeList.getNode(0);
+        while (nodePtr != NULL) {
+            if (nodePtr->getNameNum() != datum)
+                nodePtr->printMNAMat(datum, lastnode, result);
+            nodePtr = nodePtr->getNext();
+        }
+    }
+
+    //求jac矩阵
+
+    nodePtr1 = nodeList.getNode(0);
+    while (nodePtr1 != NULL) {
+        if (nodePtr1->getNameNum() != datum) {
+            nodePtr2 = nodeList.getNode(0);
+            while (nodePtr2 != NULL) {
+                if (nodePtr2->getNameNum() != datum) {
+                    nodePtr1->printJacMat(datum, nodePtr2, lastnode, eqType, jacMat);
+                }
+                nodePtr2 = nodePtr2->getNext();
+            }
+        }
+        nodePtr1 = nodePtr1->getNext();
+    }
+
+    // go down the component list and give equations for all sources
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        nodePtr2 = nodeList.getNode(0);
+        compPtr2 = compList.getComp(0);
+        while (nodePtr2 != NULL) {
+            if (nodePtr2->getNameNum() != datum) {
+                compPtr->specialPrintJacMat(datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA, jacMat); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+            }
+            nodePtr2 = nodePtr2->getNext();
+        }
+        specPrintJacMNA = 0;
+        compPtr = compPtr->getNext();
+    }
+
+
+
+
+    // print the Jacobians for the additional MNA equations
+    if (eqType == Modified) {
+        nodePtr1 = nodeList.getNode(0);
+        while (nodePtr1 != NULL) {
+            if (nodePtr1->getNameNum() != datum) {
+                nodePtr2 = nodeList.getNode(0);
+                while (nodePtr2 != NULL) {
+                    if (nodePtr2->getNameNum() != datum)
+                        nodePtr1->printJacMNAMat(datum, nodePtr2, lastnode, jacMat);
+                    nodePtr2 = nodePtr2->getNext();
+                }
+            }
+            nodePtr1 = nodePtr1->getNext();
+        }
+    }
+
+    for (int i = 0; i <= number; i++) {
+        preU[i] = nodeValue[i];
+    }
+
+    
+    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+
+    //输出在i时刻，各个电容两端的电压值
+
+    outfile << "Time:" << i << endl;
+    compPtr = compList.getComp(0);
+    while (compPtr->getNext() != NULL) {
+        if (compPtr->getType() == Capacitor) {
+            outfile << "\t" << compPtr->getName() << " voltage:" << nodeValue[compPtr->getConVal(0)] << endl;
+        }
+
+        compPtr = compPtr->getNext();
+    }
+
+
 }
 
 outfile.close();
@@ -1124,7 +1496,7 @@ cout << "input error!!!" << endl;
 
 
 void NR_Iterations(double jacMat[][30], double result[], double minDert[], int number, int &count, double accurateValue, int datum
-                    , int lastnode, bool Homotopy, double t) {
+                    , int lastnode, bool Homotopy_New,bool Homotopy, double t) {
 
 
     Component* compPtr, * compPtr2;
@@ -1238,7 +1610,10 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
         }
 
 
-        if (!Homotopy) {
+        if (Homotopy_New) {
+            for (int i = 1; i <= number; i++) {
+                result[i] = result[i] - (1 - t) * initF[i];
+            }
             convertArray(jacMat, A, result, b, number);
             Fun(A, minDert, b, number);
 
@@ -1248,10 +1623,26 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
  
 
         }
-        else {
+        else if (Homotopy) {
+            int sum = 0;
             for (int i = 1; i <= number; i++) {
-                result[i] = result[i] - (1 - t)*initF[i];
+                sum += nodeValue[i];
             }
+
+            for (int i = 1; i <= number; i++) {
+                result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
+            }
+
+            for (int i = 1; i <= number; i++) {
+                for (int j = 1; j <= number; j++) {
+                    jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+                }
+            }
+
+        }
+        else {
+            
+
             convertArray(jacMat, A, result, b, number);
             Fun(A, minDert, b, number);
 

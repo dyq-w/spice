@@ -1,0 +1,2400 @@
+Time:0.001
+	c1 voltage:0.432042
+	c2 voltage:0.421784
+	c3 voltage:9.9999e-05
+	c4 voltage:4.32041e-07
+	c5 voltage:1.5
+Time:0.002
+	c1 voltage:0.432056
+	c2 voltage:0.421785
+	c3 voltage:9.9999e-05
+	c4 voltage:4.32055e-07
+	c5 voltage:1.5
+Time:0.003
+	c1 voltage:0.485721
+	c2 voltage:0.475358
+	c3 voltage:0.000199997
+	c4 voltage:9.17775e-07
+	c5 voltage:1.5
+Time:0.004
+	c1 voltage:0.485963
+	c2 voltage:0.475596
+	c3 voltage:0.000199997
+	c4 voltage:9.18018e-07
+	c5 voltage:1.5
+Time:0.005
+	c1 voltage:0.508341
+	c2 voltage:0.497962
+	c3 voltage:0.000299994
+	c4 voltage:1.42636e-06
+	c5 voltage:1.5
+Time:0.006
+	c1 voltage:0.508374
+	c2 voltage:0.497995
+	c3 voltage:0.000299994
+	c4 voltage:1.42639e-06
+	c5 voltage:1.5
+Time:0.007
+	c1 voltage:0.521719
+	c2 voltage:0.511328
+	c3 voltage:0.00039999
+	c4 voltage:1.94811e-06
+	c5 voltage:1.5
+Time:0.008
+	c1 voltage:0.52172
+	c2 voltage:0.51133
+	c3 voltage:0.00039999
+	c4 voltage:1.94811e-06
+	c5 voltage:1.5
+Time:0.009
+	c1 voltage:0.530804
+	c2 voltage:0.520402
+	c3 voltage:0.000499985
+	c4 voltage:2.47891e-06
+	c5 voltage:1.5
+Time:0.01
+	c1 voltage:0.537936
+	c2 voltage:0.527521
+	c3 voltage:0.000599979
+	c4 voltage:3.01684e-06
+	c5 voltage:1.5
+Time:0.011
+	c1 voltage:0.537969
+	c2 voltage:0.527553
+	c3 voltage:0.000599979
+	c4 voltage:3.01688e-06
+	c5 voltage:1.5
+Time:0.012
+	c1 voltage:0.543626
+	c2 voltage:0.533198
+	c3 voltage:0.000699972
+	c4 voltage:3.5605e-06
+	c5 voltage:1.5
+Time:0.013
+	c1 voltage:0.545571
+	c2 voltage:0.535138
+	c3 voltage:0.000733303
+	c4 voltage:3.74177e-06
+	c5 voltage:1.5
+Time:0.014
+	c1 voltage:0.550025
+	c2 voltage:0.539578
+	c3 voltage:0.000833295
+	c4 voltage:4.29179e-06
+	c5 voltage:1.5
+Time:0.015
+	c1 voltage:0.551156
+	c2 voltage:0.540705
+	c3 voltage:0.00086107
+	c4 voltage:4.44521e-06
+	c5 voltage:1.5
+Time:0.016
+	c1 voltage:0.554854
+	c2 voltage:0.544389
+	c3 voltage:0.00096106
+	c4 voltage:5.00006e-06
+	c5 voltage:1.5
+Time:0.017
+	c1 voltage:0.555889
+	c2 voltage:0.54542
+	c3 voltage:0.000989761
+	c4 voltage:5.15962e-06
+	c5 voltage:1.5
+Time:0.018
+	c1 voltage:0.557317
+	c2 voltage:0.546842
+	c3 voltage:0.00103266
+	c4 voltage:5.39884e-06
+	c5 voltage:1.5
+Time:0.019
+	c1 voltage:0.560317
+	c2 voltage:0.549827
+	c3 voltage:0.00113265
+	c4 voltage:5.95915e-06
+	c5 voltage:1.5
+Time:0.02
+	c1 voltage:0.561071
+	c2 voltage:0.550577
+	c3 voltage:0.00115942
+	c4 voltage:6.10963e-06
+	c5 voltage:1.5
+Time:0.021
+	c1 voltage:0.56222
+	c2 voltage:0.551721
+	c3 voltage:0.00120167
+	c4 voltage:6.34745e-06
+	c5 voltage:1.5
+Time:0.022
+	c1 voltage:0.564749
+	c2 voltage:0.554235
+	c3 voltage:0.00130166
+	c4 voltage:6.9122e-06
+	c5 voltage:1.5
+Time:0.023
+	c1 voltage:0.5654
+	c2 voltage:0.554883
+	c3 voltage:0.00132859
+	c4 voltage:7.06465e-06
+	c5 voltage:1.5
+Time:0.024
+	c1 voltage:0.566387
+	c2 voltage:0.555863
+	c3 voltage:0.0013709
+	c4 voltage:7.30449e-06
+	c5 voltage:1.5
+Time:0.025
+	c1 voltage:0.567444
+	c2 voltage:0.556914
+	c3 voltage:0.00141705
+	c4 voltage:7.56632e-06
+	c5 voltage:1.5
+Time:0.026
+	c1 voltage:0.568516
+	c2 voltage:0.557979
+	c3 voltage:0.00146473
+	c4 voltage:7.83713e-06
+	c5 voltage:1.5
+Time:0.027
+	c1 voltage:0.56958
+	c2 voltage:0.559036
+	c3 voltage:0.00151319
+	c4 voltage:8.11259e-06
+	c5 voltage:1.5
+Time:0.028
+	c1 voltage:0.57063
+	c2 voltage:0.560079
+	c3 voltage:0.00156208
+	c4 voltage:8.39085e-06
+	c5 voltage:1.5
+Time:0.029
+	c1 voltage:0.571661
+	c2 voltage:0.561102
+	c3 voltage:0.00161125
+	c4 voltage:8.67099e-06
+	c5 voltage:1.5
+Time:0.03
+	c1 voltage:0.572671
+	c2 voltage:0.562106
+	c3 voltage:0.0016606
+	c4 voltage:8.95249e-06
+	c5 voltage:1.5
+Time:0.031
+	c1 voltage:0.57366
+	c2 voltage:0.563088
+	c3 voltage:0.00171008
+	c4 voltage:9.23503e-06
+	c5 voltage:1.5
+Time:0.032
+	c1 voltage:0.574629
+	c2 voltage:0.564049
+	c3 voltage:0.00175965
+	c4 voltage:9.51842e-06
+	c5 voltage:1.5
+Time:0.033
+	c1 voltage:0.575576
+	c2 voltage:0.564988
+	c3 voltage:0.0018093
+	c4 voltage:9.80253e-06
+	c5 voltage:1.5
+Time:0.034
+	c1 voltage:0.576503
+	c2 voltage:0.565908
+	c3 voltage:0.00185899
+	c4 voltage:1.00872e-05
+	c5 voltage:1.5
+Time:0.035
+	c1 voltage:0.57741
+	c2 voltage:0.566807
+	c3 voltage:0.00190873
+	c4 voltage:1.03725e-05
+	c5 voltage:1.5
+Time:0.036
+	c1 voltage:0.578298
+	c2 voltage:0.567687
+	c3 voltage:0.0019585
+	c4 voltage:1.06583e-05
+	c5 voltage:1.5
+Time:0.037
+	c1 voltage:0.579166
+	c2 voltage:0.568548
+	c3 voltage:0.0020083
+	c4 voltage:1.09445e-05
+	c5 voltage:1.5
+Time:0.038
+	c1 voltage:0.580017
+	c2 voltage:0.56939
+	c3 voltage:0.00205812
+	c4 voltage:1.12312e-05
+	c5 voltage:1.5
+Time:0.039
+	c1 voltage:0.580849
+	c2 voltage:0.570215
+	c3 voltage:0.00210796
+	c4 voltage:1.15182e-05
+	c5 voltage:1.5
+Time:0.04
+	c1 voltage:0.581665
+	c2 voltage:0.571023
+	c3 voltage:0.00215782
+	c4 voltage:1.18057e-05
+	c5 voltage:1.5
+Time:0.041
+	c1 voltage:0.582464
+	c2 voltage:0.571814
+	c3 voltage:0.00220769
+	c4 voltage:1.20935e-05
+	c5 voltage:1.5
+Time:0.042
+	c1 voltage:0.583248
+	c2 voltage:0.572589
+	c3 voltage:0.00225757
+	c4 voltage:1.23816e-05
+	c5 voltage:1.5
+Time:0.043
+	c1 voltage:0.584016
+	c2 voltage:0.573349
+	c3 voltage:0.00230746
+	c4 voltage:1.26701e-05
+	c5 voltage:1.5
+Time:0.044
+	c1 voltage:0.584769
+	c2 voltage:0.574094
+	c3 voltage:0.00235736
+	c4 voltage:1.29589e-05
+	c5 voltage:1.5
+Time:0.045
+	c1 voltage:0.585507
+	c2 voltage:0.574824
+	c3 voltage:0.00240726
+	c4 voltage:1.3248e-05
+	c5 voltage:1.5
+Time:0.046
+	c1 voltage:0.586232
+	c2 voltage:0.57554
+	c3 voltage:0.00245718
+	c4 voltage:1.35375e-05
+	c5 voltage:1.5
+Time:0.047
+	c1 voltage:0.586943
+	c2 voltage:0.576243
+	c3 voltage:0.00250709
+	c4 voltage:1.38272e-05
+	c5 voltage:1.5
+Time:0.048
+	c1 voltage:0.587641
+	c2 voltage:0.576932
+	c3 voltage:0.00255702
+	c4 voltage:1.41172e-05
+	c5 voltage:1.5
+Time:0.049
+	c1 voltage:0.588327
+	c2 voltage:0.577609
+	c3 voltage:0.00260695
+	c4 voltage:1.44075e-05
+	c5 voltage:1.5
+Time:0.05
+	c1 voltage:0.589
+	c2 voltage:0.578274
+	c3 voltage:0.00265688
+	c4 voltage:1.46981e-05
+	c5 voltage:1.5
+Time:0.051
+	c1 voltage:0.589662
+	c2 voltage:0.578926
+	c3 voltage:0.00270681
+	c4 voltage:1.49889e-05
+	c5 voltage:1.5
+Time:0.052
+	c1 voltage:0.590312
+	c2 voltage:0.579567
+	c3 voltage:0.00275675
+	c4 voltage:1.528e-05
+	c5 voltage:1.5
+Time:0.053
+	c1 voltage:0.59095
+	c2 voltage:0.580197
+	c3 voltage:0.0028067
+	c4 voltage:1.55714e-05
+	c5 voltage:1.5
+Time:0.054
+	c1 voltage:0.591579
+	c2 voltage:0.580816
+	c3 voltage:0.00285664
+	c4 voltage:1.58631e-05
+	c5 voltage:1.5
+Time:0.055
+	c1 voltage:0.592196
+	c2 voltage:0.581425
+	c3 voltage:0.00290659
+	c4 voltage:1.61549e-05
+	c5 voltage:1.5
+Time:0.056
+	c1 voltage:0.592804
+	c2 voltage:0.582023
+	c3 voltage:0.00295654
+	c4 voltage:1.64471e-05
+	c5 voltage:1.5
+Time:0.057
+	c1 voltage:0.593401
+	c2 voltage:0.582612
+	c3 voltage:0.00300649
+	c4 voltage:1.67394e-05
+	c5 voltage:1.5
+Time:0.058
+	c1 voltage:0.59399
+	c2 voltage:0.583191
+	c3 voltage:0.00305644
+	c4 voltage:1.70321e-05
+	c5 voltage:1.5
+Time:0.059
+	c1 voltage:0.594568
+	c2 voltage:0.58376
+	c3 voltage:0.00310639
+	c4 voltage:1.73249e-05
+	c5 voltage:1.5
+Time:0.06
+	c1 voltage:0.595138
+	c2 voltage:0.584321
+	c3 voltage:0.00315635
+	c4 voltage:1.7618e-05
+	c5 voltage:1.5
+Time:0.061
+	c1 voltage:0.595699
+	c2 voltage:0.584872
+	c3 voltage:0.00320631
+	c4 voltage:1.79113e-05
+	c5 voltage:1.5
+Time:0.062
+	c1 voltage:0.596252
+	c2 voltage:0.585415
+	c3 voltage:0.00325627
+	c4 voltage:1.82049e-05
+	c5 voltage:1.5
+Time:0.063
+	c1 voltage:0.596796
+	c2 voltage:0.58595
+	c3 voltage:0.00330623
+	c4 voltage:1.84986e-05
+	c5 voltage:1.5
+Time:0.064
+	c1 voltage:0.597332
+	c2 voltage:0.586476
+	c3 voltage:0.00335619
+	c4 voltage:1.87926e-05
+	c5 voltage:1.5
+Time:0.065
+	c1 voltage:0.59786
+	c2 voltage:0.586995
+	c3 voltage:0.00340615
+	c4 voltage:1.90868e-05
+	c5 voltage:1.5
+Time:0.066
+	c1 voltage:0.598381
+	c2 voltage:0.587506
+	c3 voltage:0.00345611
+	c4 voltage:1.93812e-05
+	c5 voltage:1.5
+Time:0.067
+	c1 voltage:0.598894
+	c2 voltage:0.588009
+	c3 voltage:0.00350608
+	c4 voltage:1.96758e-05
+	c5 voltage:1.5
+Time:0.068
+	c1 voltage:0.5994
+	c2 voltage:0.588505
+	c3 voltage:0.00355604
+	c4 voltage:1.99707e-05
+	c5 voltage:1.5
+Time:0.069
+	c1 voltage:0.599899
+	c2 voltage:0.588994
+	c3 voltage:0.00360601
+	c4 voltage:2.02657e-05
+	c5 voltage:1.5
+Time:0.07
+	c1 voltage:0.60039
+	c2 voltage:0.589476
+	c3 voltage:0.00365597
+	c4 voltage:2.0561e-05
+	c5 voltage:1.5
+Time:0.071
+	c1 voltage:0.600876
+	c2 voltage:0.589951
+	c3 voltage:0.00370594
+	c4 voltage:2.08564e-05
+	c5 voltage:1.5
+Time:0.072
+	c1 voltage:0.601354
+	c2 voltage:0.59042
+	c3 voltage:0.00375591
+	c4 voltage:2.1152e-05
+	c5 voltage:1.5
+Time:0.073
+	c1 voltage:0.601827
+	c2 voltage:0.590882
+	c3 voltage:0.00380587
+	c4 voltage:2.14479e-05
+	c5 voltage:1.5
+Time:0.074
+	c1 voltage:0.602293
+	c2 voltage:0.591338
+	c3 voltage:0.00385584
+	c4 voltage:2.17439e-05
+	c5 voltage:1.5
+Time:0.075
+	c1 voltage:0.602752
+	c2 voltage:0.591788
+	c3 voltage:0.00390581
+	c4 voltage:2.20401e-05
+	c5 voltage:1.5
+Time:0.076
+	c1 voltage:0.603206
+	c2 voltage:0.592231
+	c3 voltage:0.00395578
+	c4 voltage:2.23365e-05
+	c5 voltage:1.5
+Time:0.077
+	c1 voltage:0.603654
+	c2 voltage:0.592669
+	c3 voltage:0.00400575
+	c4 voltage:2.26331e-05
+	c5 voltage:1.5
+Time:0.078
+	c1 voltage:0.604097
+	c2 voltage:0.593102
+	c3 voltage:0.00405572
+	c4 voltage:2.29299e-05
+	c5 voltage:1.5
+Time:0.079
+	c1 voltage:0.604534
+	c2 voltage:0.593528
+	c3 voltage:0.00410569
+	c4 voltage:2.32269e-05
+	c5 voltage:1.5
+Time:0.08
+	c1 voltage:0.604965
+	c2 voltage:0.593949
+	c3 voltage:0.00415566
+	c4 voltage:2.3524e-05
+	c5 voltage:1.5
+Time:0.081
+	c1 voltage:0.605392
+	c2 voltage:0.594365
+	c3 voltage:0.00420563
+	c4 voltage:2.38214e-05
+	c5 voltage:1.5
+Time:0.082
+	c1 voltage:0.605813
+	c2 voltage:0.594776
+	c3 voltage:0.0042556
+	c4 voltage:2.41189e-05
+	c5 voltage:1.5
+Time:0.083
+	c1 voltage:0.606229
+	c2 voltage:0.595181
+	c3 voltage:0.00430557
+	c4 voltage:2.44166e-05
+	c5 voltage:1.5
+Time:0.084
+	c1 voltage:0.60664
+	c2 voltage:0.595582
+	c3 voltage:0.00435555
+	c4 voltage:2.47144e-05
+	c5 voltage:1.5
+Time:0.085
+	c1 voltage:0.607046
+	c2 voltage:0.595977
+	c3 voltage:0.00440552
+	c4 voltage:2.50124e-05
+	c5 voltage:1.5
+Time:0.086
+	c1 voltage:0.607447
+	c2 voltage:0.596368
+	c3 voltage:0.00445549
+	c4 voltage:2.53106e-05
+	c5 voltage:1.5
+Time:0.087
+	c1 voltage:0.607844
+	c2 voltage:0.596754
+	c3 voltage:0.00450546
+	c4 voltage:2.5609e-05
+	c5 voltage:1.5
+Time:0.088
+	c1 voltage:0.608236
+	c2 voltage:0.597136
+	c3 voltage:0.00455543
+	c4 voltage:2.59075e-05
+	c5 voltage:1.5
+Time:0.089
+	c1 voltage:0.608624
+	c2 voltage:0.597513
+	c3 voltage:0.00460541
+	c4 voltage:2.62062e-05
+	c5 voltage:1.5
+Time:0.09
+	c1 voltage:0.609008
+	c2 voltage:0.597885
+	c3 voltage:0.00465538
+	c4 voltage:2.65051e-05
+	c5 voltage:1.5
+Time:0.091
+	c1 voltage:0.609387
+	c2 voltage:0.598254
+	c3 voltage:0.00470535
+	c4 voltage:2.68041e-05
+	c5 voltage:1.5
+Time:0.092
+	c1 voltage:0.609762
+	c2 voltage:0.598618
+	c3 voltage:0.00475532
+	c4 voltage:2.71033e-05
+	c5 voltage:1.5
+Time:0.093
+	c1 voltage:0.610133
+	c2 voltage:0.598978
+	c3 voltage:0.0048053
+	c4 voltage:2.74026e-05
+	c5 voltage:1.5
+Time:0.094
+	c1 voltage:0.6105
+	c2 voltage:0.599334
+	c3 voltage:0.00485527
+	c4 voltage:2.77021e-05
+	c5 voltage:1.5
+Time:0.095
+	c1 voltage:0.610863
+	c2 voltage:0.599686
+	c3 voltage:0.00490524
+	c4 voltage:2.80018e-05
+	c5 voltage:1.5
+Time:0.096
+	c1 voltage:0.611222
+	c2 voltage:0.600034
+	c3 voltage:0.00495521
+	c4 voltage:2.83016e-05
+	c5 voltage:1.5
+Time:0.097
+	c1 voltage:0.611577
+	c2 voltage:0.600379
+	c3 voltage:0.00500519
+	c4 voltage:2.86016e-05
+	c5 voltage:1.5
+Time:0.098
+	c1 voltage:0.611929
+	c2 voltage:0.600719
+	c3 voltage:0.00505516
+	c4 voltage:2.89017e-05
+	c5 voltage:1.5
+Time:0.099
+	c1 voltage:0.612277
+	c2 voltage:0.601056
+	c3 voltage:0.00510513
+	c4 voltage:2.9202e-05
+	c5 voltage:1.5
+Time:0.1
+	c1 voltage:0.612621
+	c2 voltage:0.601389
+	c3 voltage:0.00515511
+	c4 voltage:2.95024e-05
+	c5 voltage:1.5
+Time:0.101
+	c1 voltage:0.612962
+	c2 voltage:0.601719
+	c3 voltage:0.00520508
+	c4 voltage:2.98029e-05
+	c5 voltage:1.5
+Time:0.102
+	c1 voltage:0.613299
+	c2 voltage:0.602046
+	c3 voltage:0.00525505
+	c4 voltage:3.01037e-05
+	c5 voltage:1.5
+Time:0.103
+	c1 voltage:0.613634
+	c2 voltage:0.602368
+	c3 voltage:0.00530503
+	c4 voltage:3.04045e-05
+	c5 voltage:1.5
+Time:0.104
+	c1 voltage:0.613964
+	c2 voltage:0.602688
+	c3 voltage:0.005355
+	c4 voltage:3.07055e-05
+	c5 voltage:1.5
+Time:0.105
+	c1 voltage:0.614292
+	c2 voltage:0.603004
+	c3 voltage:0.00540497
+	c4 voltage:3.10066e-05
+	c5 voltage:1.5
+Time:0.106
+	c1 voltage:0.614616
+	c2 voltage:0.603317
+	c3 voltage:0.00545495
+	c4 voltage:3.13079e-05
+	c5 voltage:1.5
+Time:0.107
+	c1 voltage:0.614938
+	c2 voltage:0.603627
+	c3 voltage:0.00550492
+	c4 voltage:3.16094e-05
+	c5 voltage:1.5
+Time:0.108
+	c1 voltage:0.615256
+	c2 voltage:0.603934
+	c3 voltage:0.00555489
+	c4 voltage:3.19109e-05
+	c5 voltage:1.5
+Time:0.109
+	c1 voltage:0.615571
+	c2 voltage:0.604238
+	c3 voltage:0.00560487
+	c4 voltage:3.22126e-05
+	c5 voltage:1.5
+Time:0.11
+	c1 voltage:0.615883
+	c2 voltage:0.604539
+	c3 voltage:0.00565484
+	c4 voltage:3.25145e-05
+	c5 voltage:1.5
+Time:0.111
+	c1 voltage:0.616192
+	c2 voltage:0.604836
+	c3 voltage:0.00570481
+	c4 voltage:3.28164e-05
+	c5 voltage:1.5
+Time:0.112
+	c1 voltage:0.616499
+	c2 voltage:0.605131
+	c3 voltage:0.00575479
+	c4 voltage:3.31185e-05
+	c5 voltage:1.5
+Time:0.113
+	c1 voltage:0.616802
+	c2 voltage:0.605423
+	c3 voltage:0.00580476
+	c4 voltage:3.34208e-05
+	c5 voltage:1.5
+Time:0.114
+	c1 voltage:0.617103
+	c2 voltage:0.605713
+	c3 voltage:0.00585473
+	c4 voltage:3.37232e-05
+	c5 voltage:1.5
+Time:0.115
+	c1 voltage:0.617401
+	c2 voltage:0.605999
+	c3 voltage:0.0059047
+	c4 voltage:3.40257e-05
+	c5 voltage:1.5
+Time:0.116
+	c1 voltage:0.617696
+	c2 voltage:0.606283
+	c3 voltage:0.00595468
+	c4 voltage:3.43283e-05
+	c5 voltage:1.5
+Time:0.117
+	c1 voltage:0.617989
+	c2 voltage:0.606564
+	c3 voltage:0.00600465
+	c4 voltage:3.46311e-05
+	c5 voltage:1.5
+Time:0.118
+	c1 voltage:0.618279
+	c2 voltage:0.606843
+	c3 voltage:0.00605462
+	c4 voltage:3.4934e-05
+	c5 voltage:1.5
+Time:0.119
+	c1 voltage:0.618567
+	c2 voltage:0.607118
+	c3 voltage:0.00610459
+	c4 voltage:3.5237e-05
+	c5 voltage:1.5
+Time:0.12
+	c1 voltage:0.618852
+	c2 voltage:0.607392
+	c3 voltage:0.00615457
+	c4 voltage:3.55401e-05
+	c5 voltage:1.5
+Time:0.121
+	c1 voltage:0.619134
+	c2 voltage:0.607663
+	c3 voltage:0.00620454
+	c4 voltage:3.58434e-05
+	c5 voltage:1.5
+Time:0.122
+	c1 voltage:0.619414
+	c2 voltage:0.607931
+	c3 voltage:0.00625451
+	c4 voltage:3.61468e-05
+	c5 voltage:1.5
+Time:0.123
+	c1 voltage:0.619692
+	c2 voltage:0.608197
+	c3 voltage:0.00630448
+	c4 voltage:3.64503e-05
+	c5 voltage:1.5
+Time:0.124
+	c1 voltage:0.619968
+	c2 voltage:0.608461
+	c3 voltage:0.00635446
+	c4 voltage:3.6754e-05
+	c5 voltage:1.5
+Time:0.125
+	c1 voltage:0.620241
+	c2 voltage:0.608722
+	c3 voltage:0.00640443
+	c4 voltage:3.70577e-05
+	c5 voltage:1.5
+Time:0.126
+	c1 voltage:0.620512
+	c2 voltage:0.608981
+	c3 voltage:0.0064544
+	c4 voltage:3.73616e-05
+	c5 voltage:1.5
+Time:0.127
+	c1 voltage:0.62078
+	c2 voltage:0.609238
+	c3 voltage:0.00650437
+	c4 voltage:3.76656e-05
+	c5 voltage:1.5
+Time:0.128
+	c1 voltage:0.621046
+	c2 voltage:0.609493
+	c3 voltage:0.00655434
+	c4 voltage:3.79698e-05
+	c5 voltage:1.5
+Time:0.129
+	c1 voltage:0.621311
+	c2 voltage:0.609745
+	c3 voltage:0.00660432
+	c4 voltage:3.8274e-05
+	c5 voltage:1.5
+Time:0.13
+	c1 voltage:0.621573
+	c2 voltage:0.609995
+	c3 voltage:0.00665429
+	c4 voltage:3.85784e-05
+	c5 voltage:1.5
+Time:0.131
+	c1 voltage:0.621833
+	c2 voltage:0.610243
+	c3 voltage:0.00670426
+	c4 voltage:3.88829e-05
+	c5 voltage:1.5
+Time:0.132
+	c1 voltage:0.62209
+	c2 voltage:0.610489
+	c3 voltage:0.00675423
+	c4 voltage:3.91875e-05
+	c5 voltage:1.5
+Time:0.133
+	c1 voltage:0.622346
+	c2 voltage:0.610733
+	c3 voltage:0.0068042
+	c4 voltage:3.94922e-05
+	c5 voltage:1.5
+Time:0.134
+	c1 voltage:0.6226
+	c2 voltage:0.610975
+	c3 voltage:0.00685417
+	c4 voltage:3.9797e-05
+	c5 voltage:1.5
+Time:0.135
+	c1 voltage:0.622852
+	c2 voltage:0.611214
+	c3 voltage:0.00690415
+	c4 voltage:4.01019e-05
+	c5 voltage:1.5
+Time:0.136
+	c1 voltage:0.623102
+	c2 voltage:0.611452
+	c3 voltage:0.00695412
+	c4 voltage:4.0407e-05
+	c5 voltage:1.5
+Time:0.137
+	c1 voltage:0.62335
+	c2 voltage:0.611688
+	c3 voltage:0.00700409
+	c4 voltage:4.07121e-05
+	c5 voltage:1.5
+Time:0.138
+	c1 voltage:0.623596
+	c2 voltage:0.611922
+	c3 voltage:0.00705406
+	c4 voltage:4.10174e-05
+	c5 voltage:1.5
+Time:0.139
+	c1 voltage:0.62384
+	c2 voltage:0.612154
+	c3 voltage:0.00710403
+	c4 voltage:4.13228e-05
+	c5 voltage:1.5
+Time:0.14
+	c1 voltage:0.624082
+	c2 voltage:0.612384
+	c3 voltage:0.007154
+	c4 voltage:4.16283e-05
+	c5 voltage:1.5
+Time:0.141
+	c1 voltage:0.624322
+	c2 voltage:0.612613
+	c3 voltage:0.00720397
+	c4 voltage:4.19339e-05
+	c5 voltage:1.5
+Time:0.142
+	c1 voltage:0.624561
+	c2 voltage:0.612839
+	c3 voltage:0.00725394
+	c4 voltage:4.22396e-05
+	c5 voltage:1.5
+Time:0.143
+	c1 voltage:0.624798
+	c2 voltage:0.613064
+	c3 voltage:0.00730391
+	c4 voltage:4.25454e-05
+	c5 voltage:1.5
+Time:0.144
+	c1 voltage:0.625033
+	c2 voltage:0.613287
+	c3 voltage:0.00735388
+	c4 voltage:4.28514e-05
+	c5 voltage:1.5
+Time:0.145
+	c1 voltage:0.625266
+	c2 voltage:0.613508
+	c3 voltage:0.00740385
+	c4 voltage:4.31574e-05
+	c5 voltage:1.5
+Time:0.146
+	c1 voltage:0.625498
+	c2 voltage:0.613727
+	c3 voltage:0.00745382
+	c4 voltage:4.34635e-05
+	c5 voltage:1.5
+Time:0.147
+	c1 voltage:0.625728
+	c2 voltage:0.613945
+	c3 voltage:0.00750379
+	c4 voltage:4.37698e-05
+	c5 voltage:1.5
+Time:0.148
+	c1 voltage:0.625956
+	c2 voltage:0.614161
+	c3 voltage:0.00755376
+	c4 voltage:4.40761e-05
+	c5 voltage:1.5
+Time:0.149
+	c1 voltage:0.626183
+	c2 voltage:0.614376
+	c3 voltage:0.00760373
+	c4 voltage:4.43826e-05
+	c5 voltage:1.5
+Time:0.15
+	c1 voltage:0.626408
+	c2 voltage:0.614589
+	c3 voltage:0.0076537
+	c4 voltage:4.46891e-05
+	c5 voltage:1.5
+Time:0.151
+	c1 voltage:0.626632
+	c2 voltage:0.6148
+	c3 voltage:0.00770367
+	c4 voltage:4.49958e-05
+	c5 voltage:1.5
+Time:0.152
+	c1 voltage:0.626853
+	c2 voltage:0.615009
+	c3 voltage:0.00775364
+	c4 voltage:4.53025e-05
+	c5 voltage:1.5
+Time:0.153
+	c1 voltage:0.627074
+	c2 voltage:0.615217
+	c3 voltage:0.00780361
+	c4 voltage:4.56094e-05
+	c5 voltage:1.5
+Time:0.154
+	c1 voltage:0.627293
+	c2 voltage:0.615424
+	c3 voltage:0.00785358
+	c4 voltage:4.59163e-05
+	c5 voltage:1.5
+Time:0.155
+	c1 voltage:0.62751
+	c2 voltage:0.615629
+	c3 voltage:0.00790355
+	c4 voltage:4.62234e-05
+	c5 voltage:1.5
+Time:0.156
+	c1 voltage:0.627726
+	c2 voltage:0.615832
+	c3 voltage:0.00795351
+	c4 voltage:4.65306e-05
+	c5 voltage:1.5
+Time:0.157
+	c1 voltage:0.62794
+	c2 voltage:0.616034
+	c3 voltage:0.00800348
+	c4 voltage:4.68378e-05
+	c5 voltage:1.5
+Time:0.158
+	c1 voltage:0.628153
+	c2 voltage:0.616235
+	c3 voltage:0.00805345
+	c4 voltage:4.71452e-05
+	c5 voltage:1.5
+Time:0.159
+	c1 voltage:0.628365
+	c2 voltage:0.616434
+	c3 voltage:0.00810342
+	c4 voltage:4.74526e-05
+	c5 voltage:1.5
+Time:0.16
+	c1 voltage:0.628575
+	c2 voltage:0.616632
+	c3 voltage:0.00815339
+	c4 voltage:4.77602e-05
+	c5 voltage:1.5
+Time:0.161
+	c1 voltage:0.628783
+	c2 voltage:0.616828
+	c3 voltage:0.00820336
+	c4 voltage:4.80678e-05
+	c5 voltage:1.5
+Time:0.162
+	c1 voltage:0.628991
+	c2 voltage:0.617023
+	c3 voltage:0.00825332
+	c4 voltage:4.83755e-05
+	c5 voltage:1.5
+Time:0.163
+	c1 voltage:0.629196
+	c2 voltage:0.617216
+	c3 voltage:0.00830329
+	c4 voltage:4.86834e-05
+	c5 voltage:1.5
+Time:0.164
+	c1 voltage:0.629401
+	c2 voltage:0.617408
+	c3 voltage:0.00835326
+	c4 voltage:4.89913e-05
+	c5 voltage:1.5
+Time:0.165
+	c1 voltage:0.629604
+	c2 voltage:0.617599
+	c3 voltage:0.00840323
+	c4 voltage:4.92993e-05
+	c5 voltage:1.5
+Time:0.166
+	c1 voltage:0.629806
+	c2 voltage:0.617788
+	c3 voltage:0.0084532
+	c4 voltage:4.96074e-05
+	c5 voltage:1.5
+Time:0.167
+	c1 voltage:0.630007
+	c2 voltage:0.617976
+	c3 voltage:0.00850316
+	c4 voltage:4.99156e-05
+	c5 voltage:1.5
+Time:0.168
+	c1 voltage:0.630206
+	c2 voltage:0.618163
+	c3 voltage:0.00855313
+	c4 voltage:5.02239e-05
+	c5 voltage:1.5
+Time:0.169
+	c1 voltage:0.630404
+	c2 voltage:0.618348
+	c3 voltage:0.0086031
+	c4 voltage:5.05323e-05
+	c5 voltage:1.5
+Time:0.17
+	c1 voltage:0.630601
+	c2 voltage:0.618533
+	c3 voltage:0.00865306
+	c4 voltage:5.08408e-05
+	c5 voltage:1.5
+Time:0.171
+	c1 voltage:0.630797
+	c2 voltage:0.618716
+	c3 voltage:0.00870303
+	c4 voltage:5.11494e-05
+	c5 voltage:1.5
+Time:0.172
+	c1 voltage:0.630991
+	c2 voltage:0.618897
+	c3 voltage:0.008753
+	c4 voltage:5.14581e-05
+	c5 voltage:1.5
+Time:0.173
+	c1 voltage:0.631184
+	c2 voltage:0.619078
+	c3 voltage:0.00880296
+	c4 voltage:5.17668e-05
+	c5 voltage:1.5
+Time:0.174
+	c1 voltage:0.631376
+	c2 voltage:0.619257
+	c3 voltage:0.00885293
+	c4 voltage:5.20756e-05
+	c5 voltage:1.5
+Time:0.175
+	c1 voltage:0.631567
+	c2 voltage:0.619435
+	c3 voltage:0.0089029
+	c4 voltage:5.23846e-05
+	c5 voltage:1.5
+Time:0.176
+	c1 voltage:0.631756
+	c2 voltage:0.619612
+	c3 voltage:0.00895286
+	c4 voltage:5.26936e-05
+	c5 voltage:1.5
+Time:0.177
+	c1 voltage:0.631945
+	c2 voltage:0.619788
+	c3 voltage:0.00900283
+	c4 voltage:5.30027e-05
+	c5 voltage:1.5
+Time:0.178
+	c1 voltage:0.632132
+	c2 voltage:0.619963
+	c3 voltage:0.00905279
+	c4 voltage:5.33119e-05
+	c5 voltage:1.5
+Time:0.179
+	c1 voltage:0.632318
+	c2 voltage:0.620136
+	c3 voltage:0.00910276
+	c4 voltage:5.36212e-05
+	c5 voltage:1.5
+Time:0.18
+	c1 voltage:0.632503
+	c2 voltage:0.620308
+	c3 voltage:0.00915272
+	c4 voltage:5.39305e-05
+	c5 voltage:1.5
+Time:0.181
+	c1 voltage:0.632687
+	c2 voltage:0.62048
+	c3 voltage:0.00920269
+	c4 voltage:5.424e-05
+	c5 voltage:1.5
+Time:0.182
+	c1 voltage:0.63287
+	c2 voltage:0.62065
+	c3 voltage:0.00925266
+	c4 voltage:5.45495e-05
+	c5 voltage:1.5
+Time:0.183
+	c1 voltage:0.633052
+	c2 voltage:0.620819
+	c3 voltage:0.00930262
+	c4 voltage:5.48592e-05
+	c5 voltage:1.5
+Time:0.184
+	c1 voltage:0.633232
+	c2 voltage:0.620987
+	c3 voltage:0.00935259
+	c4 voltage:5.51689e-05
+	c5 voltage:1.5
+Time:0.185
+	c1 voltage:0.633412
+	c2 voltage:0.621153
+	c3 voltage:0.00940255
+	c4 voltage:5.54786e-05
+	c5 voltage:1.5
+Time:0.186
+	c1 voltage:0.633591
+	c2 voltage:0.621319
+	c3 voltage:0.00945251
+	c4 voltage:5.57885e-05
+	c5 voltage:1.5
+Time:0.187
+	c1 voltage:0.633768
+	c2 voltage:0.621484
+	c3 voltage:0.00950248
+	c4 voltage:5.60985e-05
+	c5 voltage:1.5
+Time:0.188
+	c1 voltage:0.633945
+	c2 voltage:0.621648
+	c3 voltage:0.00955244
+	c4 voltage:5.64085e-05
+	c5 voltage:1.5
+Time:0.189
+	c1 voltage:0.63412
+	c2 voltage:0.62181
+	c3 voltage:0.00960241
+	c4 voltage:5.67186e-05
+	c5 voltage:1.5
+Time:0.19
+	c1 voltage:0.634295
+	c2 voltage:0.621972
+	c3 voltage:0.00965237
+	c4 voltage:5.70288e-05
+	c5 voltage:1.5
+Time:0.191
+	c1 voltage:0.634468
+	c2 voltage:0.622133
+	c3 voltage:0.00970234
+	c4 voltage:5.73391e-05
+	c5 voltage:1.5
+Time:0.192
+	c1 voltage:0.634641
+	c2 voltage:0.622293
+	c3 voltage:0.0097523
+	c4 voltage:5.76495e-05
+	c5 voltage:1.5
+Time:0.193
+	c1 voltage:0.634812
+	c2 voltage:0.622451
+	c3 voltage:0.00980226
+	c4 voltage:5.79599e-05
+	c5 voltage:1.5
+Time:0.194
+	c1 voltage:0.634983
+	c2 voltage:0.622609
+	c3 voltage:0.00985223
+	c4 voltage:5.82705e-05
+	c5 voltage:1.5
+Time:0.195
+	c1 voltage:0.635153
+	c2 voltage:0.622766
+	c3 voltage:0.00990219
+	c4 voltage:5.85811e-05
+	c5 voltage:1.5
+Time:0.196
+	c1 voltage:0.635321
+	c2 voltage:0.622922
+	c3 voltage:0.00995215
+	c4 voltage:5.88918e-05
+	c5 voltage:1.5
+Time:0.197
+	c1 voltage:0.635489
+	c2 voltage:0.623077
+	c3 voltage:0.0100021
+	c4 voltage:5.92025e-05
+	c5 voltage:1.5
+Time:0.198
+	c1 voltage:0.635656
+	c2 voltage:0.623231
+	c3 voltage:0.0100521
+	c4 voltage:5.95134e-05
+	c5 voltage:1.5
+Time:0.199
+	c1 voltage:0.635822
+	c2 voltage:0.623384
+	c3 voltage:0.010102
+	c4 voltage:5.98243e-05
+	c5 voltage:1.5
+Time:0.2
+	c1 voltage:0.635987
+	c2 voltage:0.623536
+	c3 voltage:0.010152
+	c4 voltage:6.01353e-05
+	c5 voltage:1.5
+Time:0.201
+	c1 voltage:0.636151
+	c2 voltage:0.623687
+	c3 voltage:0.010202
+	c4 voltage:6.04464e-05
+	c5 voltage:1.5
+Time:0.202
+	c1 voltage:0.636315
+	c2 voltage:0.623837
+	c3 voltage:0.0102519
+	c4 voltage:6.07575e-05
+	c5 voltage:1.5
+Time:0.203
+	c1 voltage:0.636477
+	c2 voltage:0.623987
+	c3 voltage:0.0103019
+	c4 voltage:6.10688e-05
+	c5 voltage:1.5
+Time:0.204
+	c1 voltage:0.636639
+	c2 voltage:0.624135
+	c3 voltage:0.0103519
+	c4 voltage:6.13801e-05
+	c5 voltage:1.5
+Time:0.205
+	c1 voltage:0.636799
+	c2 voltage:0.624283
+	c3 voltage:0.0104018
+	c4 voltage:6.16914e-05
+	c5 voltage:1.5
+Time:0.206
+	c1 voltage:0.636959
+	c2 voltage:0.62443
+	c3 voltage:0.0104518
+	c4 voltage:6.20029e-05
+	c5 voltage:1.5
+Time:0.207
+	c1 voltage:0.637118
+	c2 voltage:0.624576
+	c3 voltage:0.0105017
+	c4 voltage:6.23144e-05
+	c5 voltage:1.5
+Time:0.208
+	c1 voltage:0.637276
+	c2 voltage:0.624721
+	c3 voltage:0.0105517
+	c4 voltage:6.2626e-05
+	c5 voltage:1.5
+Time:0.209
+	c1 voltage:0.637434
+	c2 voltage:0.624866
+	c3 voltage:0.0106017
+	c4 voltage:6.29377e-05
+	c5 voltage:1.5
+Time:0.21
+	c1 voltage:0.63759
+	c2 voltage:0.625009
+	c3 voltage:0.0106516
+	c4 voltage:6.32495e-05
+	c5 voltage:1.5
+Time:0.211
+	c1 voltage:0.637746
+	c2 voltage:0.625152
+	c3 voltage:0.0107016
+	c4 voltage:6.35613e-05
+	c5 voltage:1.5
+Time:0.212
+	c1 voltage:0.637901
+	c2 voltage:0.625294
+	c3 voltage:0.0107515
+	c4 voltage:6.38732e-05
+	c5 voltage:1.5
+Time:0.213
+	c1 voltage:0.638055
+	c2 voltage:0.625435
+	c3 voltage:0.0108015
+	c4 voltage:6.41852e-05
+	c5 voltage:1.5
+Time:0.214
+	c1 voltage:0.638209
+	c2 voltage:0.625575
+	c3 voltage:0.0108515
+	c4 voltage:6.44972e-05
+	c5 voltage:1.5
+Time:0.215
+	c1 voltage:0.638361
+	c2 voltage:0.625715
+	c3 voltage:0.0109014
+	c4 voltage:6.48094e-05
+	c5 voltage:1.5
+Time:0.216
+	c1 voltage:0.638513
+	c2 voltage:0.625853
+	c3 voltage:0.0109514
+	c4 voltage:6.51216e-05
+	c5 voltage:1.5
+Time:0.217
+	c1 voltage:0.638664
+	c2 voltage:0.625991
+	c3 voltage:0.0110013
+	c4 voltage:6.54338e-05
+	c5 voltage:1.5
+Time:0.218
+	c1 voltage:0.638814
+	c2 voltage:0.626129
+	c3 voltage:0.0110513
+	c4 voltage:6.57462e-05
+	c5 voltage:1.5
+Time:0.219
+	c1 voltage:0.638964
+	c2 voltage:0.626265
+	c3 voltage:0.0111013
+	c4 voltage:6.60586e-05
+	c5 voltage:1.5
+Time:0.22
+	c1 voltage:0.639113
+	c2 voltage:0.626401
+	c3 voltage:0.0111512
+	c4 voltage:6.6371e-05
+	c5 voltage:1.5
+Time:0.221
+	c1 voltage:0.639261
+	c2 voltage:0.626536
+	c3 voltage:0.0112012
+	c4 voltage:6.66836e-05
+	c5 voltage:1.5
+Time:0.222
+	c1 voltage:0.639408
+	c2 voltage:0.62667
+	c3 voltage:0.0112511
+	c4 voltage:6.69962e-05
+	c5 voltage:1.5
+Time:0.223
+	c1 voltage:0.639555
+	c2 voltage:0.626803
+	c3 voltage:0.0113011
+	c4 voltage:6.73089e-05
+	c5 voltage:1.5
+Time:0.224
+	c1 voltage:0.639701
+	c2 voltage:0.626936
+	c3 voltage:0.0113511
+	c4 voltage:6.76217e-05
+	c5 voltage:1.5
+Time:0.225
+	c1 voltage:0.639846
+	c2 voltage:0.627068
+	c3 voltage:0.011401
+	c4 voltage:6.79345e-05
+	c5 voltage:1.5
+Time:0.226
+	c1 voltage:0.63999
+	c2 voltage:0.6272
+	c3 voltage:0.011451
+	c4 voltage:6.82474e-05
+	c5 voltage:1.5
+Time:0.227
+	c1 voltage:0.640134
+	c2 voltage:0.62733
+	c3 voltage:0.0115009
+	c4 voltage:6.85604e-05
+	c5 voltage:1.5
+Time:0.228
+	c1 voltage:0.640277
+	c2 voltage:0.62746
+	c3 voltage:0.0115509
+	c4 voltage:6.88734e-05
+	c5 voltage:1.5
+Time:0.229
+	c1 voltage:0.64042
+	c2 voltage:0.62759
+	c3 voltage:0.0116009
+	c4 voltage:6.91865e-05
+	c5 voltage:1.5
+Time:0.23
+	c1 voltage:0.640562
+	c2 voltage:0.627718
+	c3 voltage:0.0116508
+	c4 voltage:6.94997e-05
+	c5 voltage:1.5
+Time:0.231
+	c1 voltage:0.640703
+	c2 voltage:0.627846
+	c3 voltage:0.0117008
+	c4 voltage:6.98129e-05
+	c5 voltage:1.5
+Time:0.232
+	c1 voltage:0.640843
+	c2 voltage:0.627973
+	c3 voltage:0.0117507
+	c4 voltage:7.01262e-05
+	c5 voltage:1.5
+Time:0.233
+	c1 voltage:0.640983
+	c2 voltage:0.6281
+	c3 voltage:0.0118007
+	c4 voltage:7.04396e-05
+	c5 voltage:1.5
+Time:0.234
+	c1 voltage:0.641122
+	c2 voltage:0.628226
+	c3 voltage:0.0118506
+	c4 voltage:7.0753e-05
+	c5 voltage:1.5
+Time:0.235
+	c1 voltage:0.641261
+	c2 voltage:0.628351
+	c3 voltage:0.0119006
+	c4 voltage:7.10665e-05
+	c5 voltage:1.5
+Time:0.236
+	c1 voltage:0.641399
+	c2 voltage:0.628476
+	c3 voltage:0.0119506
+	c4 voltage:7.13801e-05
+	c5 voltage:1.5
+Time:0.237
+	c1 voltage:0.641536
+	c2 voltage:0.6286
+	c3 voltage:0.0120005
+	c4 voltage:7.16937e-05
+	c5 voltage:1.5
+Time:0.238
+	c1 voltage:0.641672
+	c2 voltage:0.628723
+	c3 voltage:0.0120505
+	c4 voltage:7.20074e-05
+	c5 voltage:1.5
+Time:0.239
+	c1 voltage:0.641808
+	c2 voltage:0.628846
+	c3 voltage:0.0121004
+	c4 voltage:7.23212e-05
+	c5 voltage:1.5
+Time:0.24
+	c1 voltage:0.641944
+	c2 voltage:0.628968
+	c3 voltage:0.0121504
+	c4 voltage:7.2635e-05
+	c5 voltage:1.5
+Time:0.241
+	c1 voltage:0.642078
+	c2 voltage:0.629089
+	c3 voltage:0.0122003
+	c4 voltage:7.29489e-05
+	c5 voltage:1.5
+Time:0.242
+	c1 voltage:0.642213
+	c2 voltage:0.62921
+	c3 voltage:0.0122503
+	c4 voltage:7.32629e-05
+	c5 voltage:1.5
+Time:0.243
+	c1 voltage:0.642346
+	c2 voltage:0.62933
+	c3 voltage:0.0123002
+	c4 voltage:7.35769e-05
+	c5 voltage:1.5
+Time:0.244
+	c1 voltage:0.642479
+	c2 voltage:0.62945
+	c3 voltage:0.0123502
+	c4 voltage:7.3891e-05
+	c5 voltage:1.5
+Time:0.245
+	c1 voltage:0.642611
+	c2 voltage:0.629569
+	c3 voltage:0.0124002
+	c4 voltage:7.42051e-05
+	c5 voltage:1.5
+Time:0.246
+	c1 voltage:0.642743
+	c2 voltage:0.629688
+	c3 voltage:0.0124501
+	c4 voltage:7.45194e-05
+	c5 voltage:1.5
+Time:0.247
+	c1 voltage:0.642874
+	c2 voltage:0.629805
+	c3 voltage:0.0125001
+	c4 voltage:7.48336e-05
+	c5 voltage:1.5
+Time:0.248
+	c1 voltage:0.643005
+	c2 voltage:0.629923
+	c3 voltage:0.01255
+	c4 voltage:7.5148e-05
+	c5 voltage:1.5
+Time:0.249
+	c1 voltage:0.643135
+	c2 voltage:0.630039
+	c3 voltage:0.0126
+	c4 voltage:7.54624e-05
+	c5 voltage:1.5
+Time:0.25
+	c1 voltage:0.643264
+	c2 voltage:0.630155
+	c3 voltage:0.0126499
+	c4 voltage:7.57768e-05
+	c5 voltage:1.5
+Time:0.251
+	c1 voltage:0.643393
+	c2 voltage:0.630271
+	c3 voltage:0.0126999
+	c4 voltage:7.60914e-05
+	c5 voltage:1.5
+Time:0.252
+	c1 voltage:0.643521
+	c2 voltage:0.630386
+	c3 voltage:0.0127498
+	c4 voltage:7.6406e-05
+	c5 voltage:1.5
+Time:0.253
+	c1 voltage:0.643649
+	c2 voltage:0.6305
+	c3 voltage:0.0127998
+	c4 voltage:7.67206e-05
+	c5 voltage:1.5
+Time:0.254
+	c1 voltage:0.643776
+	c2 voltage:0.630614
+	c3 voltage:0.0128498
+	c4 voltage:7.70353e-05
+	c5 voltage:1.5
+Time:0.255
+	c1 voltage:0.643903
+	c2 voltage:0.630728
+	c3 voltage:0.0128997
+	c4 voltage:7.73501e-05
+	c5 voltage:1.5
+Time:0.256
+	c1 voltage:0.644029
+	c2 voltage:0.63084
+	c3 voltage:0.0129497
+	c4 voltage:7.76649e-05
+	c5 voltage:1.5
+Time:0.257
+	c1 voltage:0.644155
+	c2 voltage:0.630953
+	c3 voltage:0.0129996
+	c4 voltage:7.79798e-05
+	c5 voltage:1.5
+Time:0.258
+	c1 voltage:0.64428
+	c2 voltage:0.631064
+	c3 voltage:0.0130496
+	c4 voltage:7.82948e-05
+	c5 voltage:1.5
+Time:0.259
+	c1 voltage:0.644404
+	c2 voltage:0.631175
+	c3 voltage:0.0130995
+	c4 voltage:7.86098e-05
+	c5 voltage:1.5
+Time:0.26
+	c1 voltage:0.644528
+	c2 voltage:0.631286
+	c3 voltage:0.0131495
+	c4 voltage:7.89249e-05
+	c5 voltage:1.5
+Time:0.261
+	c1 voltage:0.644652
+	c2 voltage:0.631396
+	c3 voltage:0.0131994
+	c4 voltage:7.924e-05
+	c5 voltage:1.5
+Time:0.262
+	c1 voltage:0.644775
+	c2 voltage:0.631506
+	c3 voltage:0.0132494
+	c4 voltage:7.95552e-05
+	c5 voltage:1.5
+Time:0.263
+	c1 voltage:0.644897
+	c2 voltage:0.631615
+	c3 voltage:0.0132993
+	c4 voltage:7.98704e-05
+	c5 voltage:1.5
+Time:0.264
+	c1 voltage:0.645019
+	c2 voltage:0.631723
+	c3 voltage:0.0133493
+	c4 voltage:8.01858e-05
+	c5 voltage:1.5
+Time:0.265
+	c1 voltage:0.645141
+	c2 voltage:0.631831
+	c3 voltage:0.0133992
+	c4 voltage:8.05011e-05
+	c5 voltage:1.5
+Time:0.266
+	c1 voltage:0.645262
+	c2 voltage:0.631939
+	c3 voltage:0.0134492
+	c4 voltage:8.08165e-05
+	c5 voltage:1.5
+Time:0.267
+	c1 voltage:0.645382
+	c2 voltage:0.632046
+	c3 voltage:0.0134991
+	c4 voltage:8.1132e-05
+	c5 voltage:1.5
+Time:0.268
+	c1 voltage:0.645502
+	c2 voltage:0.632152
+	c3 voltage:0.0135491
+	c4 voltage:8.14476e-05
+	c5 voltage:1.5
+Time:0.269
+	c1 voltage:0.645622
+	c2 voltage:0.632259
+	c3 voltage:0.013599
+	c4 voltage:8.17632e-05
+	c5 voltage:1.5
+Time:0.27
+	c1 voltage:0.645741
+	c2 voltage:0.632364
+	c3 voltage:0.013649
+	c4 voltage:8.20788e-05
+	c5 voltage:1.5
+Time:0.271
+	c1 voltage:0.645859
+	c2 voltage:0.632469
+	c3 voltage:0.0136989
+	c4 voltage:8.23946e-05
+	c5 voltage:1.5
+Time:0.272
+	c1 voltage:0.645977
+	c2 voltage:0.632574
+	c3 voltage:0.0137489
+	c4 voltage:8.27103e-05
+	c5 voltage:1.5
+Time:0.273
+	c1 voltage:0.646095
+	c2 voltage:0.632678
+	c3 voltage:0.0137988
+	c4 voltage:8.30262e-05
+	c5 voltage:1.5
+Time:0.274
+	c1 voltage:0.646212
+	c2 voltage:0.632781
+	c3 voltage:0.0138488
+	c4 voltage:8.33421e-05
+	c5 voltage:1.5
+Time:0.275
+	c1 voltage:0.646328
+	c2 voltage:0.632885
+	c3 voltage:0.0138988
+	c4 voltage:8.3658e-05
+	c5 voltage:1.5
+Time:0.276
+	c1 voltage:0.646445
+	c2 voltage:0.632987
+	c3 voltage:0.0139487
+	c4 voltage:8.3974e-05
+	c5 voltage:1.5
+Time:0.277
+	c1 voltage:0.64656
+	c2 voltage:0.63309
+	c3 voltage:0.0139987
+	c4 voltage:8.42901e-05
+	c5 voltage:1.5
+Time:0.278
+	c1 voltage:0.646676
+	c2 voltage:0.633191
+	c3 voltage:0.0140486
+	c4 voltage:8.46062e-05
+	c5 voltage:1.5
+Time:0.279
+	c1 voltage:0.64679
+	c2 voltage:0.633293
+	c3 voltage:0.0140986
+	c4 voltage:8.49223e-05
+	c5 voltage:1.5
+Time:0.28
+	c1 voltage:0.646905
+	c2 voltage:0.633394
+	c3 voltage:0.0141485
+	c4 voltage:8.52386e-05
+	c5 voltage:1.5
+Time:0.281
+	c1 voltage:0.647019
+	c2 voltage:0.633494
+	c3 voltage:0.0141985
+	c4 voltage:8.55548e-05
+	c5 voltage:1.5
+Time:0.282
+	c1 voltage:0.647132
+	c2 voltage:0.633594
+	c3 voltage:0.0142484
+	c4 voltage:8.58712e-05
+	c5 voltage:1.5
+Time:0.283
+	c1 voltage:0.647245
+	c2 voltage:0.633693
+	c3 voltage:0.0142984
+	c4 voltage:8.61876e-05
+	c5 voltage:1.5
+Time:0.284
+	c1 voltage:0.647358
+	c2 voltage:0.633793
+	c3 voltage:0.0143483
+	c4 voltage:8.6504e-05
+	c5 voltage:1.5
+Time:0.285
+	c1 voltage:0.64747
+	c2 voltage:0.633891
+	c3 voltage:0.0143983
+	c4 voltage:8.68205e-05
+	c5 voltage:1.5
+Time:0.286
+	c1 voltage:0.647582
+	c2 voltage:0.633989
+	c3 voltage:0.0144482
+	c4 voltage:8.71371e-05
+	c5 voltage:1.5
+Time:0.287
+	c1 voltage:0.647693
+	c2 voltage:0.634087
+	c3 voltage:0.0144981
+	c4 voltage:8.74537e-05
+	c5 voltage:1.5
+Time:0.288
+	c1 voltage:0.647804
+	c2 voltage:0.634185
+	c3 voltage:0.0145481
+	c4 voltage:8.77703e-05
+	c5 voltage:1.5
+Time:0.289
+	c1 voltage:0.647914
+	c2 voltage:0.634281
+	c3 voltage:0.014598
+	c4 voltage:8.8087e-05
+	c5 voltage:1.5
+Time:0.29
+	c1 voltage:0.648024
+	c2 voltage:0.634378
+	c3 voltage:0.014648
+	c4 voltage:8.84038e-05
+	c5 voltage:1.5
+Time:0.291
+	c1 voltage:0.648134
+	c2 voltage:0.634474
+	c3 voltage:0.0146979
+	c4 voltage:8.87206e-05
+	c5 voltage:1.5
+Time:0.292
+	c1 voltage:0.648243
+	c2 voltage:0.63457
+	c3 voltage:0.0147479
+	c4 voltage:8.90375e-05
+	c5 voltage:1.5
+Time:0.293
+	c1 voltage:0.648352
+	c2 voltage:0.634665
+	c3 voltage:0.0147978
+	c4 voltage:8.93544e-05
+	c5 voltage:1.5
+Time:0.294
+	c1 voltage:0.64846
+	c2 voltage:0.63476
+	c3 voltage:0.0148478
+	c4 voltage:8.96714e-05
+	c5 voltage:1.5
+Time:0.295
+	c1 voltage:0.648568
+	c2 voltage:0.634854
+	c3 voltage:0.0148977
+	c4 voltage:8.99884e-05
+	c5 voltage:1.5
+Time:0.296
+	c1 voltage:0.648676
+	c2 voltage:0.634948
+	c3 voltage:0.0149477
+	c4 voltage:9.03055e-05
+	c5 voltage:1.5
+Time:0.297
+	c1 voltage:0.648783
+	c2 voltage:0.635042
+	c3 voltage:0.0149976
+	c4 voltage:9.06227e-05
+	c5 voltage:1.5
+Time:0.298
+	c1 voltage:0.64889
+	c2 voltage:0.635135
+	c3 voltage:0.0150476
+	c4 voltage:9.09398e-05
+	c5 voltage:1.5
+Time:0.299
+	c1 voltage:0.648996
+	c2 voltage:0.635228
+	c3 voltage:0.0150975
+	c4 voltage:9.12571e-05
+	c5 voltage:1.5
+Time:0.3
+	c1 voltage:0.649102
+	c2 voltage:0.635321
+	c3 voltage:0.0151475
+	c4 voltage:9.15744e-05
+	c5 voltage:1.5
+Time:0.301
+	c1 voltage:0.649208
+	c2 voltage:0.635413
+	c3 voltage:0.0151974
+	c4 voltage:9.18917e-05
+	c5 voltage:1.5
+Time:0.302
+	c1 voltage:0.649313
+	c2 voltage:0.635504
+	c3 voltage:0.0152474
+	c4 voltage:9.22091e-05
+	c5 voltage:1.5
+Time:0.303
+	c1 voltage:0.649418
+	c2 voltage:0.635596
+	c3 voltage:0.0152973
+	c4 voltage:9.25266e-05
+	c5 voltage:1.5
+Time:0.304
+	c1 voltage:0.649523
+	c2 voltage:0.635687
+	c3 voltage:0.0153473
+	c4 voltage:9.28441e-05
+	c5 voltage:1.5
+Time:0.305
+	c1 voltage:0.649627
+	c2 voltage:0.635777
+	c3 voltage:0.0153972
+	c4 voltage:9.31616e-05
+	c5 voltage:1.5
+Time:0.306
+	c1 voltage:0.64973
+	c2 voltage:0.635867
+	c3 voltage:0.0154471
+	c4 voltage:9.34792e-05
+	c5 voltage:1.5
+Time:0.307
+	c1 voltage:0.649834
+	c2 voltage:0.635957
+	c3 voltage:0.0154971
+	c4 voltage:9.37969e-05
+	c5 voltage:1.5
+Time:0.308
+	c1 voltage:0.649937
+	c2 voltage:0.636046
+	c3 voltage:0.015547
+	c4 voltage:9.41146e-05
+	c5 voltage:1.5
+Time:0.309
+	c1 voltage:0.650039
+	c2 voltage:0.636136
+	c3 voltage:0.015597
+	c4 voltage:9.44323e-05
+	c5 voltage:1.5
+Time:0.31
+	c1 voltage:0.650142
+	c2 voltage:0.636224
+	c3 voltage:0.0156469
+	c4 voltage:9.47501e-05
+	c5 voltage:1.5
+Time:0.311
+	c1 voltage:0.650244
+	c2 voltage:0.636313
+	c3 voltage:0.0156969
+	c4 voltage:9.5068e-05
+	c5 voltage:1.5
+Time:0.312
+	c1 voltage:0.650345
+	c2 voltage:0.6364
+	c3 voltage:0.0157468
+	c4 voltage:9.53859e-05
+	c5 voltage:1.5
+Time:0.313
+	c1 voltage:0.650446
+	c2 voltage:0.636488
+	c3 voltage:0.0157968
+	c4 voltage:9.57038e-05
+	c5 voltage:1.5
+Time:0.314
+	c1 voltage:0.650547
+	c2 voltage:0.636575
+	c3 voltage:0.0158467
+	c4 voltage:9.60218e-05
+	c5 voltage:1.5
+Time:0.315
+	c1 voltage:0.650648
+	c2 voltage:0.636662
+	c3 voltage:0.0158966
+	c4 voltage:9.63399e-05
+	c5 voltage:1.5
+Time:0.316
+	c1 voltage:0.650748
+	c2 voltage:0.636749
+	c3 voltage:0.0159466
+	c4 voltage:9.66579e-05
+	c5 voltage:1.5
+Time:0.317
+	c1 voltage:0.650848
+	c2 voltage:0.636835
+	c3 voltage:0.0159965
+	c4 voltage:9.69761e-05
+	c5 voltage:1.5
+Time:0.318
+	c1 voltage:0.650947
+	c2 voltage:0.636921
+	c3 voltage:0.0160465
+	c4 voltage:9.72943e-05
+	c5 voltage:1.5
+Time:0.319
+	c1 voltage:0.651046
+	c2 voltage:0.637006
+	c3 voltage:0.0160964
+	c4 voltage:9.76125e-05
+	c5 voltage:1.5
+Time:0.32
+	c1 voltage:0.651145
+	c2 voltage:0.637091
+	c3 voltage:0.0161464
+	c4 voltage:9.79308e-05
+	c5 voltage:1.5
+Time:0.321
+	c1 voltage:0.651244
+	c2 voltage:0.637176
+	c3 voltage:0.0161963
+	c4 voltage:9.82492e-05
+	c5 voltage:1.5
+Time:0.322
+	c1 voltage:0.651342
+	c2 voltage:0.637261
+	c3 voltage:0.0162463
+	c4 voltage:9.85675e-05
+	c5 voltage:1.5
+Time:0.323
+	c1 voltage:0.651439
+	c2 voltage:0.637345
+	c3 voltage:0.0162962
+	c4 voltage:9.8886e-05
+	c5 voltage:1.5
+Time:0.324
+	c1 voltage:0.651537
+	c2 voltage:0.637429
+	c3 voltage:0.0163461
+	c4 voltage:9.92045e-05
+	c5 voltage:1.5
+Time:0.325
+	c1 voltage:0.651634
+	c2 voltage:0.637512
+	c3 voltage:0.0163961
+	c4 voltage:9.9523e-05
+	c5 voltage:1.5
+Time:0.326
+	c1 voltage:0.651731
+	c2 voltage:0.637595
+	c3 voltage:0.016446
+	c4 voltage:9.98416e-05
+	c5 voltage:1.5
+Time:0.327
+	c1 voltage:0.651827
+	c2 voltage:0.637678
+	c3 voltage:0.016496
+	c4 voltage:0.00010016
+	c5 voltage:1.5
+Time:0.328
+	c1 voltage:0.651923
+	c2 voltage:0.637761
+	c3 voltage:0.0165459
+	c4 voltage:0.000100479
+	c5 voltage:1.5
+Time:0.329
+	c1 voltage:0.652019
+	c2 voltage:0.637843
+	c3 voltage:0.0165959
+	c4 voltage:0.000100798
+	c5 voltage:1.5
+Time:0.33
+	c1 voltage:0.652115
+	c2 voltage:0.637925
+	c3 voltage:0.0166458
+	c4 voltage:0.000101116
+	c5 voltage:1.5
+Time:0.331
+	c1 voltage:0.65221
+	c2 voltage:0.638006
+	c3 voltage:0.0166957
+	c4 voltage:0.000101435
+	c5 voltage:1.5
+Time:0.332
+	c1 voltage:0.652305
+	c2 voltage:0.638087
+	c3 voltage:0.0167457
+	c4 voltage:0.000101754
+	c5 voltage:1.5
+Time:0.333
+	c1 voltage:0.652399
+	c2 voltage:0.638168
+	c3 voltage:0.0167956
+	c4 voltage:0.000102073
+	c5 voltage:1.5
+Time:0.334
+	c1 voltage:0.652494
+	c2 voltage:0.638249
+	c3 voltage:0.0168456
+	c4 voltage:0.000102392
+	c5 voltage:1.5
+Time:0.335
+	c1 voltage:0.652588
+	c2 voltage:0.638329
+	c3 voltage:0.0168955
+	c4 voltage:0.000102711
+	c5 voltage:1.5
+Time:0.336
+	c1 voltage:0.652681
+	c2 voltage:0.638409
+	c3 voltage:0.0169454
+	c4 voltage:0.00010303
+	c5 voltage:1.5
+Time:0.337
+	c1 voltage:0.652774
+	c2 voltage:0.638489
+	c3 voltage:0.0169954
+	c4 voltage:0.000103349
+	c5 voltage:1.5
+Time:0.338
+	c1 voltage:0.652868
+	c2 voltage:0.638568
+	c3 voltage:0.0170453
+	c4 voltage:0.000103668
+	c5 voltage:1.5
+Time:0.339
+	c1 voltage:0.65296
+	c2 voltage:0.638647
+	c3 voltage:0.0170953
+	c4 voltage:0.000103987
+	c5 voltage:1.5
+Time:0.34
+	c1 voltage:0.653053
+	c2 voltage:0.638726
+	c3 voltage:0.0171452
+	c4 voltage:0.000104307
+	c5 voltage:1.5
+Time:0.341
+	c1 voltage:0.653145
+	c2 voltage:0.638804
+	c3 voltage:0.0171951
+	c4 voltage:0.000104626
+	c5 voltage:1.5
+Time:0.342
+	c1 voltage:0.653237
+	c2 voltage:0.638883
+	c3 voltage:0.0172451
+	c4 voltage:0.000104945
+	c5 voltage:1.5
+Time:0.343
+	c1 voltage:0.653328
+	c2 voltage:0.63896
+	c3 voltage:0.017295
+	c4 voltage:0.000105265
+	c5 voltage:1.5
+Time:0.344
+	c1 voltage:0.653419
+	c2 voltage:0.639038
+	c3 voltage:0.017345
+	c4 voltage:0.000105584
+	c5 voltage:1.5
+Time:0.345
+	c1 voltage:0.65351
+	c2 voltage:0.639115
+	c3 voltage:0.0173949
+	c4 voltage:0.000105903
+	c5 voltage:1.5
+Time:0.346
+	c1 voltage:0.653601
+	c2 voltage:0.639192
+	c3 voltage:0.0174448
+	c4 voltage:0.000106223
+	c5 voltage:1.5
+Time:0.347
+	c1 voltage:0.653691
+	c2 voltage:0.639269
+	c3 voltage:0.0174948
+	c4 voltage:0.000106542
+	c5 voltage:1.5
+Time:0.348
+	c1 voltage:0.653782
+	c2 voltage:0.639345
+	c3 voltage:0.0175447
+	c4 voltage:0.000106862
+	c5 voltage:1.5
+Time:0.349
+	c1 voltage:0.653871
+	c2 voltage:0.639422
+	c3 voltage:0.0175947
+	c4 voltage:0.000107182
+	c5 voltage:1.5
+Time:0.35
+	c1 voltage:0.653961
+	c2 voltage:0.639497
+	c3 voltage:0.0176446
+	c4 voltage:0.000107501
+	c5 voltage:1.5
+Time:0.351
+	c1 voltage:0.65405
+	c2 voltage:0.639573
+	c3 voltage:0.0176945
+	c4 voltage:0.000107821
+	c5 voltage:1.5
+Time:0.352
+	c1 voltage:0.654139
+	c2 voltage:0.639648
+	c3 voltage:0.0177445
+	c4 voltage:0.000108141
+	c5 voltage:1.5
+Time:0.353
+	c1 voltage:0.654228
+	c2 voltage:0.639723
+	c3 voltage:0.0177944
+	c4 voltage:0.000108461
+	c5 voltage:1.5
+Time:0.354
+	c1 voltage:0.654316
+	c2 voltage:0.639798
+	c3 voltage:0.0178443
+	c4 voltage:0.00010878
+	c5 voltage:1.5
+Time:0.355
+	c1 voltage:0.654404
+	c2 voltage:0.639872
+	c3 voltage:0.0178943
+	c4 voltage:0.0001091
+	c5 voltage:1.5
+Time:0.356
+	c1 voltage:0.654492
+	c2 voltage:0.639947
+	c3 voltage:0.0179442
+	c4 voltage:0.00010942
+	c5 voltage:1.5
+Time:0.357
+	c1 voltage:0.65458
+	c2 voltage:0.64002
+	c3 voltage:0.0179942
+	c4 voltage:0.00010974
+	c5 voltage:1.5
+Time:0.358
+	c1 voltage:0.654667
+	c2 voltage:0.640094
+	c3 voltage:0.0180441
+	c4 voltage:0.00011006
+	c5 voltage:1.5
+Time:0.359
+	c1 voltage:0.654754
+	c2 voltage:0.640167
+	c3 voltage:0.018094
+	c4 voltage:0.00011038
+	c5 voltage:1.5
+Time:0.36
+	c1 voltage:0.654841
+	c2 voltage:0.640241
+	c3 voltage:0.018144
+	c4 voltage:0.0001107
+	c5 voltage:1.5
+Time:0.361
+	c1 voltage:0.654928
+	c2 voltage:0.640313
+	c3 voltage:0.0181939
+	c4 voltage:0.000111021
+	c5 voltage:1.5
+Time:0.362
+	c1 voltage:0.655014
+	c2 voltage:0.640386
+	c3 voltage:0.0182438
+	c4 voltage:0.000111341
+	c5 voltage:1.5
+Time:0.363
+	c1 voltage:0.6551
+	c2 voltage:0.640458
+	c3 voltage:0.0182938
+	c4 voltage:0.000111661
+	c5 voltage:1.5
+Time:0.364
+	c1 voltage:0.655186
+	c2 voltage:0.64053
+	c3 voltage:0.0183437
+	c4 voltage:0.000111981
+	c5 voltage:1.5
+Time:0.365
+	c1 voltage:0.655271
+	c2 voltage:0.640602
+	c3 voltage:0.0183937
+	c4 voltage:0.000112302
+	c5 voltage:1.5
+Time:0.366
+	c1 voltage:0.655357
+	c2 voltage:0.640674
+	c3 voltage:0.0184436
+	c4 voltage:0.000112622
+	c5 voltage:1.5
+Time:0.367
+	c1 voltage:0.655441
+	c2 voltage:0.640745
+	c3 voltage:0.0184935
+	c4 voltage:0.000112942
+	c5 voltage:1.5
+Time:0.368
+	c1 voltage:0.655526
+	c2 voltage:0.640816
+	c3 voltage:0.0185435
+	c4 voltage:0.000113263
+	c5 voltage:1.5
+Time:0.369
+	c1 voltage:0.655611
+	c2 voltage:0.640887
+	c3 voltage:0.0185934
+	c4 voltage:0.000113583
+	c5 voltage:1.5
+Time:0.37
+	c1 voltage:0.655695
+	c2 voltage:0.640957
+	c3 voltage:0.0186433
+	c4 voltage:0.000113904
+	c5 voltage:1.5
+Time:0.371
+	c1 voltage:0.655779
+	c2 voltage:0.641028
+	c3 voltage:0.0186933
+	c4 voltage:0.000114224
+	c5 voltage:1.5
+Time:0.372
+	c1 voltage:0.655863
+	c2 voltage:0.641098
+	c3 voltage:0.0187432
+	c4 voltage:0.000114545
+	c5 voltage:1.5
+Time:0.373
+	c1 voltage:0.655946
+	c2 voltage:0.641167
+	c3 voltage:0.0187931
+	c4 voltage:0.000114866
+	c5 voltage:1.5
+Time:0.374
+	c1 voltage:0.656029
+	c2 voltage:0.641237
+	c3 voltage:0.0188431
+	c4 voltage:0.000115186
+	c5 voltage:1.5
+Time:0.375
+	c1 voltage:0.656112
+	c2 voltage:0.641306
+	c3 voltage:0.018893
+	c4 voltage:0.000115507
+	c5 voltage:1.5
+Time:0.376
+	c1 voltage:0.656195
+	c2 voltage:0.641375
+	c3 voltage:0.0189429
+	c4 voltage:0.000115828
+	c5 voltage:1.5
+Time:0.377
+	c1 voltage:0.656278
+	c2 voltage:0.641444
+	c3 voltage:0.0189929
+	c4 voltage:0.000116149
+	c5 voltage:1.5
+Time:0.378
+	c1 voltage:0.65636
+	c2 voltage:0.641512
+	c3 voltage:0.0190428
+	c4 voltage:0.00011647
+	c5 voltage:1.5
+Time:0.379
+	c1 voltage:0.656442
+	c2 voltage:0.641581
+	c3 voltage:0.0190927
+	c4 voltage:0.00011679
+	c5 voltage:1.5
+Time:0.38
+	c1 voltage:0.656524
+	c2 voltage:0.641649
+	c3 voltage:0.0191427
+	c4 voltage:0.000117111
+	c5 voltage:1.5
+Time:0.381
+	c1 voltage:0.656605
+	c2 voltage:0.641717
+	c3 voltage:0.0191926
+	c4 voltage:0.000117432
+	c5 voltage:1.5
+Time:0.382
+	c1 voltage:0.656687
+	c2 voltage:0.641784
+	c3 voltage:0.0192425
+	c4 voltage:0.000117753
+	c5 voltage:1.5
+Time:0.383
+	c1 voltage:0.656768
+	c2 voltage:0.641852
+	c3 voltage:0.0192925
+	c4 voltage:0.000118074
+	c5 voltage:1.5
+Time:0.384
+	c1 voltage:0.656849
+	c2 voltage:0.641919
+	c3 voltage:0.0193424
+	c4 voltage:0.000118396
+	c5 voltage:1.5
+Time:0.385
+	c1 voltage:0.656929
+	c2 voltage:0.641986
+	c3 voltage:0.0193923
+	c4 voltage:0.000118717
+	c5 voltage:1.5
+Time:0.386
+	c1 voltage:0.65701
+	c2 voltage:0.642052
+	c3 voltage:0.0194423
+	c4 voltage:0.000119038
+	c5 voltage:1.5
+Time:0.387
+	c1 voltage:0.65709
+	c2 voltage:0.642119
+	c3 voltage:0.0194922
+	c4 voltage:0.000119359
+	c5 voltage:1.5
+Time:0.388
+	c1 voltage:0.65717
+	c2 voltage:0.642185
+	c3 voltage:0.0195421
+	c4 voltage:0.00011968
+	c5 voltage:1.5
+Time:0.389
+	c1 voltage:0.65725
+	c2 voltage:0.642251
+	c3 voltage:0.0195921
+	c4 voltage:0.000120002
+	c5 voltage:1.5
+Time:0.39
+	c1 voltage:0.657329
+	c2 voltage:0.642317
+	c3 voltage:0.019642
+	c4 voltage:0.000120323
+	c5 voltage:1.5
+Time:0.391
+	c1 voltage:0.657409
+	c2 voltage:0.642382
+	c3 voltage:0.0196919
+	c4 voltage:0.000120644
+	c5 voltage:1.5
+Time:0.392
+	c1 voltage:0.657488
+	c2 voltage:0.642448
+	c3 voltage:0.0197419
+	c4 voltage:0.000120966
+	c5 voltage:1.5
+Time:0.393
+	c1 voltage:0.657566
+	c2 voltage:0.642513
+	c3 voltage:0.0197918
+	c4 voltage:0.000121287
+	c5 voltage:1.5
+Time:0.394
+	c1 voltage:0.657645
+	c2 voltage:0.642578
+	c3 voltage:0.0198417
+	c4 voltage:0.000121609
+	c5 voltage:1.5
+Time:0.395
+	c1 voltage:0.657724
+	c2 voltage:0.642642
+	c3 voltage:0.0198917
+	c4 voltage:0.00012193
+	c5 voltage:1.5
+Time:0.396
+	c1 voltage:0.657802
+	c2 voltage:0.642707
+	c3 voltage:0.0199416
+	c4 voltage:0.000122252
+	c5 voltage:1.5
+Time:0.397
+	c1 voltage:0.65788
+	c2 voltage:0.642771
+	c3 voltage:0.0199915
+	c4 voltage:0.000122573
+	c5 voltage:1.5
+Time:0.398
+	c1 voltage:0.657957
+	c2 voltage:0.642835
+	c3 voltage:0.0200415
+	c4 voltage:0.000122895
+	c5 voltage:1.5
+Time:0.399
+	c1 voltage:0.658035
+	c2 voltage:0.642899
+	c3 voltage:0.0200914
+	c4 voltage:0.000123217
+	c5 voltage:1.5
+Time:0.4
+	c1 voltage:0.658112
+	c2 voltage:0.642962
+	c3 voltage:0.0201413
+	c4 voltage:0.000123538
+	c5 voltage:1.5
