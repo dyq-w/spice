@@ -960,8 +960,8 @@ for (int i = 0; i < number; i++) {
 else if (choose == 3) {
 /*
     # 同伦法的公式      H(x,t)=tf(x)+(1-t)G(x-a)
-    # 默认G为对角矩阵，且对角线的值为2.
-    # 默认  a = 0.9
+    # 默认G为对角矩阵，且对角线的值为1e-3.
+    # 默认 a 给定
     
 */
 
@@ -975,15 +975,18 @@ cin >> number;
 double t = 0;
 cout << "Please enter the step size:" << endl;
 cin >> stepSize;
-cout << "Please enter the initial data value:" << endl;
-for (int i = 0; i < number; i++) {
-    cin >> nodeValue[i + 1];
-}
-int count = 1;
-double accurateValue = 1000;
 
-//第一次迭代求解，此时t=0。
-double sum = 0;
+int count = 1;
+double accurateValue =0.0;
+
+cout << "please input required accuracy:" << endl;
+cin >> accurateValue;
+
+
+//第一次迭代会使，初始的nodeValued的值和a中的值相等
+for (int i = 0; i < number; i++) {
+     nodeValue[i + 1] = a[i+1];
+}
 
 
 t = t + stepSize;
@@ -1081,18 +1084,22 @@ if (eqType == Modified) {
 
 //对result 和 jacmat 进行处理
 
-sum = 0;
-for (int i = 1; i <= number; i++) {
-    sum += nodeValue[i];
-}
 
 for (int i = 1; i <= number; i++) {
-    result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
+    result[i] = t * result[i] + (1 - t) * G * (nodeValue[i] - a[i]);
 }
 
 for (int i = 1; i <= number; i++) {
     for (int j = 1; j <= number; j++) {
-        jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+        if (i == j) {
+
+            jacMat[i][j] = jacMat[i][j] * t + (1 - t) * G;
+
+        }
+        else {
+            jacMat[i][j] = jacMat[i][j] * t;
+        }
+        
     }
 }
 
@@ -1186,18 +1193,21 @@ while (t < 1.0) {
         }
     }
     if (t < 1.0) {
-        sum = 0;
         for (int i = 1; i <= number; i++) {
-            sum += nodeValue[i];
-        }
-
-        for (int i = 1; i <= number; i++) {
-            result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
+            result[i] = t * result[i] + (1 - t) * G * (nodeValue[i] - a[i]);
         }
 
         for (int i = 1; i <= number; i++) {
             for (int j = 1; j <= number; j++) {
-                jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+                if (i == j) {
+
+                    jacMat[i][j] = jacMat[i][j] * t + (1 - t) * G;
+
+                }
+                else {
+                    jacMat[i][j] = jacMat[i][j] * t;
+                }
+
             }
         }
     }
@@ -1522,6 +1532,10 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
             result[i + 1] = 0.0;
         }
         count++;
+        if (count > 1000) {
+            cout << "存在一次迭代不能达到精确值！ 此时 t=" <<t<< endl;
+            break;
+        }
         nodePtr = nodeList.getNode(0);
         while (nodePtr != NULL) {
             if (nodePtr->getNameNum() != datum) {
@@ -1637,6 +1651,12 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
                 for (int j = 1; j <= number; j++) {
                     jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
                 }
+            }
+            convertArray(jacMat, A, result, b, number);
+            Fun(A, minDert, b, number);
+
+            for (int i = 0; i < number; i++) {
+                nodeValue[i + 1] = nodeValue[i + 1] + minDert[i];
             }
 
         }

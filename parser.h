@@ -16,7 +16,8 @@ const double K = 1.38E-23;
 const double Q = 1.60E-19;
 
 
-double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = { 0.0 }, preU[30] = {0.0}, stepSize = 0.0, stopTime = 0.0;
+double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = { 0.0 }, 
+preU[30] = { 0.0 }, stepSize = 0.0, stopTime = 0.0, G = 1e-3, a[30] = {0.5825,0.5862,0.9258,0.5751,0.01,0.8094,0.6088 };
 int Vsoure[10][4]={0};    /*  
 						   Vsoure[x][0]; 表示V(x),是否链接两个非零节点
 						   Vsoure[x][1]; 表示V(x),的F(x)是否已经输出一次
