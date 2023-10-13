@@ -12,6 +12,7 @@ char* strComponentType(Component* compPtr);
 char* ComponentTypeName(Component* compPtr);  //obtain component type name
 int portNum(Component* comPtr, Node* nodePtr); //obtain port number
 bool isAccurate(double result[], int num, double accurateValue);
+bool isClose(double A[], double B[], int num, double accurate = 1e-6);
 void Fun(double A[][30], double x[], double b[], int n);
 void convertArray(double jacMat[][30], double A[][30], double result[], double y[], int number);
 void NR_Iterations(double jacMat[][30], double result[], double minDert[], int number, int& count, 
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
     char inName[NameLength], outName[NameLength], buf[BufLength],myOutName[NameLength],
         buf1[BufLength], buf2[BufLength], buf3[BufLength], nameBuf[NameLength],
         * bufPtr, * charPtr1, * charPtr2;
-    int intBuf1, intBuf2, intBuf3, intBuf4, datum = NA, eqNum = NA, specPrintJacMNA = 0;
+    int intBuf1, intBuf2, intBuf3, intBuf4, datum = NA, eqNum = NA, specPrintJacMNA = 0, count=0;
     double douBuf1, douBuf2, douBuf3, douBuf4;
     CompType typeBuf;
     Component* compPtr, * compPtr1, * compPtr2;
@@ -188,7 +189,7 @@ int main(int argc, char* argv[]) {
             case 'v':
             case 'V':
             {
-                int vsnum = vSCount;
+                
                 typeBuf = VSource;
                 strcpy(nameBuf, strtok(buf, " "));
                 intBuf1 = atoi(strtok(NULL, " "));
@@ -196,10 +197,10 @@ int main(int argc, char* argv[]) {
                 douBuf1 = atof(strtok(NULL, " "));
                 compPtr = new Component(typeBuf, douBuf1, NA, intBuf1, intBuf2, NA, NA, NULL, nameBuf);
                 compList.addComp(compPtr);
-                if (intBuf1 != 0 && intBuf2 != 0) {
-                    vsnum++;
-                    Vsoure[vsnum][0] = 1;
-                    Vsoure[vsnum][2] = intBuf2;
+                if (intBuf1 != datum && intBuf2 != datum) {
+                    
+                    Vsoure[compPtr->getcompNum()][0] = 1;
+                    Vsoure[compPtr->getcompNum()][2] = intBuf2;
                 }
                 break;
             }
@@ -351,6 +352,8 @@ int main(int argc, char* argv[]) {
         lastnode = (nodePtr->getNameNum() > lastnode) ? nodePtr->getNameNum() : lastnode;
         nodePtr = nodePtr->getNext();
     }
+    //lastnode = 6;
+   
 
     //  Loop to find the datum
     if (datum == NA) {
@@ -362,7 +365,7 @@ int main(int argc, char* argv[]) {
             nodePtr1 = nodePtr1->getNext();
         }
         //datum = nodePtr->getNameNum();
-        datum = 0; //此处做出了修改，暂时不明白该处理有啥作用
+        datum = 0; //此处做出了修改
     }
 
     //=================================
@@ -426,7 +429,6 @@ int main(int argc, char* argv[]) {
             compPtr = compPtr->getNext();
         }
     }
-
 
     // go down the node list and give additional MNA equations
     if (eqType == Modified) {
@@ -495,7 +497,7 @@ int main(int argc, char* argv[]) {
 
 
     // %***************************************************************************************************
-
+/*
    if (!strcmp(myOutName, "NOTHING")) {
         strcpy(myOutName, inName);
         strtok(myOutName, ".");
@@ -582,7 +584,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    outfile.close();
+    outfile.close();*/
 
     //%****************************************************************************************************
     int choose = 0;
@@ -593,7 +595,9 @@ int main(int argc, char* argv[]) {
     cout << "   2、Homotopy-Newton" << endl;
     cout << "   3、Homotopy" << endl;
     cout << "   4、Transient" << endl;
-    cout << "   5、P_Transient" << endl;
+    cout << "   5、CL_P_Transient" << endl;
+    cout << "   6、CV_P_Transient" << endl;
+    cout << "   7、CV_P_Transient_plus" << endl;
 
     cout << "*************************************" << endl;
 
@@ -709,6 +713,8 @@ int main(int argc, char* argv[]) {
         cin >> accurateValue;
         cout << "------------------output------------------------------------" << endl;
 
+      
+        
 
         NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
 
@@ -725,6 +731,7 @@ int main(int argc, char* argv[]) {
             cout << "x(" << i + 1 << ") =    " << nodeValue[i + 1] << endl;
         }
 
+
     }
 else if (choose == 2) {
 
@@ -732,6 +739,8 @@ else if (choose == 2) {
 //------------------------同伦法求解电路方程------------------------------
 
 cout << endl << endl << "----------------Using Homotopy-Newton Method to Solve Circuit Equations--------------------------" << endl << endl;
+
+outfile.open("nrhomo.txt", ios::out);
 double stepSize;
 int number = 0;
 
@@ -745,7 +754,6 @@ cout << "Please enter the initial data value:" << endl;
 for (int i = 0; i < number; i++) {
     cin >> nodeValue[i + 1];
 }
-int count = 1;
 double accurateValue;
 
 cout << "please input required accuracy:" << endl;
@@ -844,10 +852,10 @@ for (int i = 1; i <= number; i++) {
     result[i] = t * initF[i];
 }
 
-while (t < 1.0) {
-    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode, true, t);
+while (t < 1.0+stepSize) {
+    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode, true, false, t);
     t += stepSize;
-
+    
     nodePtr = nodeList.getNode(0);
     while (nodePtr != NULL) {
         if (nodePtr->getNameNum() != datum) {
@@ -932,15 +940,24 @@ while (t < 1.0) {
             nodePtr1 = nodePtr1->getNext();
         }
     }
-    if (t < 1.0) {
+    if (t < 1.0+stepNum) {
         for (int i = 1; i <= number; i++) {
             result[i] = result[i] - (1 - t) * initF[i];
         }
     }
 
 
+    outfile << "time:" << t-stepSize << endl;
+    for (int i = 1;  i <= number; i++) {
+        outfile << "x" << i << "=" << nodeValue[i] << endl;
+    }
+         
+    
+
+
 }
-NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+outfile.close();
+//NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
 
 cout << endl;
 for (int i = 0; i < number; i++) {
@@ -966,17 +983,17 @@ else if (choose == 3) {
 */
 
 cout << endl << endl << "----------------Using Homotopy Method to Solve Circuit Equations--------------------------" << endl << endl;
-double stepSize;
-int number = 0;
+outfile.open("homotopy.txt", ios::out);
+double t_stepSize;
+int number = 0, step_num = 0, step_sum=0;
 
 
 cout << "Please enter the initial data number：" << endl;
 cin >> number;
 double t = 0;
-cout << "Please enter the step size:" << endl;
-cin >> stepSize;
+cout << "Please enter the initial step size:" << endl;
+cin >> t_stepSize;
 
-int count = 1;
 double accurateValue =0.0;
 
 cout << "please input required accuracy:" << endl;
@@ -989,7 +1006,7 @@ for (int i = 0; i < number; i++) {
 }
 
 
-t = t + stepSize;
+t = t + t_stepSize;
 
 
 //第二次迭代
@@ -1086,8 +1103,12 @@ if (eqType == Modified) {
 
 
 for (int i = 1; i <= number; i++) {
+
     result[i] = t * result[i] + (1 - t) * G * (nodeValue[i] - a[i]);
+
 }
+
+
 
 for (int i = 1; i <= number; i++) {
     for (int j = 1; j <= number; j++) {
@@ -1104,9 +1125,45 @@ for (int i = 1; i <= number; i++) {
 }
 
 
-while (t < 1.0) {
+while (true) {
     NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode, false, true, t);
-    t += stepSize;
+    cout << endl << "第" << ++step_num << "次迭代次数：" << count << endl;
+    step_sum += count;
+  
+    if (t == 1)
+        break;
+    if (count < 5) {
+        t_stepSize *= 2;
+        t = t + t_stepSize;
+        
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+    }
+    if (count > 4 && count < 8) {
+        t += t_stepSize;
+      
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+    }
+    if (count > 7) {
+        step_sum -= count;
+        t -= t_stepSize;
+        t_stepSize /= 2;
+        t += t_stepSize;
+        for (int i = 1; i <= number; i++) {
+            nodeValue[i]= preU[i];
+        }
+    }
+    
+    //t = t + t_stepSize;
+    
+
+    if (t > 1)
+        t = 1;
+
+    cout << "t:" << t << endl;
 
     nodePtr = nodeList.getNode(0);
     while (nodePtr != NULL) {
@@ -1192,7 +1249,7 @@ while (t < 1.0) {
             nodePtr1 = nodePtr1->getNext();
         }
     }
-    if (t < 1.0) {
+    if (t <1.0 || t==1) {
         for (int i = 1; i <= number; i++) {
             result[i] = t * result[i] + (1 - t) * G * (nodeValue[i] - a[i]);
         }
@@ -1212,10 +1269,16 @@ while (t < 1.0) {
         }
     }
 
+    outfile << "time:" << t-t_stepSize << endl;
+    for (int i = 1; i <= number; i++) {
+        outfile << "x" << i << "=" << nodeValue[i] << endl;
+    }
+
 
 }
-NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
 
+cout << "N_R迭代总次数：" << step_sum << endl;
+outfile.close();
 cout << endl;
 for (int i = 0; i < number; i++) {
     cout << "▲x(" << i + 1 << ") =    " << minDert[i] << endl;
@@ -1251,7 +1314,6 @@ nodeValue[2] = 0;
 nodeValue[1] = 0;
 nodeValue[3] = 0;
 
-int count = 1;
 double accurateValue;
 
 cout << "please input required accuracy:" << endl;
@@ -1360,26 +1422,38 @@ else if (choose == 5) {
 
 //----------------------------P_Tran-----------------------------------------------------------
 
+//同时加入电容和电感
 cout << endl << endl << "----------------Using P-Tran Method to Solve Circuit Equations--------------------------" << endl << endl;
 
 outfile.open("ptran.txt", ios::out);
 int number = 0;
 isTran = 1;      //--------------------
 
+
 cout << "please input data numbers:" << endl;
 cin >> number;
 for (int i = 1; i <= number; i++) {
-    nodeValue[i] = 0;
+    nodeValue[i] = 0.0;
 }
 
-int count = 1;
-double accurateValue=0.0;
+double accurateValue = 0.0;
 
 cout << "please input required accuracy:" << endl;
 cin >> accurateValue;
 
-for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
+//for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
+while (true) {
+
     stepNum++;
+
+    endTimeFlag += stepSize;
+    if (endTimeFlag > stopTime)
+         throw runtime_error("timeout");
+     
+    if (stepSize < 1e-6)
+        throw runtime_error("stepSize is too small!");
+
+  
     nodePtr = nodeList.getNode(0);
     while (nodePtr != NULL) {
         if (nodePtr->getNameNum() != datum) {
@@ -1465,32 +1539,516 @@ for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
         }
     }
 
-    for (int i = 0; i <= number; i++) {
-        preU[i] = nodeValue[i];
+
+
+
+
+
+    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+    
+    
+    stepNum += count;
+
+    
+
+
+    if (isClose(preU, nodeValue, number, 1e-5)) {
+        break;
+    }
+
+    outfile << "Time:" << endTimeFlag << endl;
+    for (int i = 1; i <= number; i++) {
+        outfile << "x" << i << "=" << nodeValue[i] << endl;
+    }
+
+
+    if (count <= 4) {
+        stepSize = stepSize * 2;
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+        cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长更新为：" << stepSize * 2 << endl;
+    }
+    else if (11 < count) {
+        stepNum -= count;
+        endTimeFlag -= stepSize;
+        stepSize = stepSize / 8;
+        for (int i = 1; i <= number; i++) {
+            nodeValue[i] = preU[i];
+        }
+
+        cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长更新为：" << stepSize / 8 << endl;
+
+    }
+    else {
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+        cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长不变" << endl;
+    }
+
+
+    /*
+      *
+      *更新经过电容的电流
+    */
+    /*
+    Component* comPtrs = compList.getComp(0);
+    while (comPtrs != NULL) {
+        if (comPtrs->getType() == Inductor) {
+            Node* nodePtrs = comPtrs->getNode(0);
+            Connections * conPtrs=nodePtrs->getConList();
+            while (conPtrs != NULL) {
+                if (conPtrs->comp->getType() == VSource) {
+                    preI[comPtrs->getcompNum()] = preU[lastnode + conPtrs->comp->getcompNum()];
+                }
+
+                conPtrs = conPtrs->next;
+            }
+
+
+
+            nodePtrs = comPtrs->getNode(1);
+            conPtrs = nodePtrs->getConList();
+            while (conPtrs != NULL) {
+                if (conPtrs->comp->getType() == VSource) {
+                    preI[comPtrs->getcompNum()] = preU[lastnode + conPtrs->comp->getcompNum()];
+                }
+
+                conPtrs = conPtrs->next;
+            }
+
+
+        }
+
+        comPtrs = comPtrs->getNext();
+    }
+   */
+    
+    Component* comPtrs = compList.getComp(0);
+    while (comPtrs != NULL) {
+        if (comPtrs->getType() == Inductor) {
+
+            preI[comPtrs->getcompNum()] = preI[comPtrs->getcompNum()] + stepSize * (nodeValue[comPtrs->getConVal(1)] - nodeValue[comPtrs->getConVal(0)]) / comPtrs->getVal();
+
+        }
+
+        comPtrs = comPtrs->getNext();
     }
 
     
-    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
 
-    //输出在i时刻，各个电容两端的电压值
+    /*******************************************************************/
 
-    outfile << "Time:" << i << endl;
-    compPtr = compList.getComp(0);
-    while (compPtr->getNext() != NULL) {
-        if (compPtr->getType() == Capacitor) {
-            outfile << "\t" << compPtr->getName() << " voltage:" << nodeValue[compPtr->getConVal(0)] << endl;
+
+    for (int i = 1; i <= number; i++) {
+        nodeValue[i] = 0.0;
+    }
+
+    for (int i = 0; i < number; i++) {
+        for (int j = 0; j < number; j++) {
+            jacMat[i + 1][j + 1] = 0.0;
+        }
+        result[i + 1] = 0.0;
+    }
+
+
+
+}
+
+
+
+outfile.close();
+
+cout << "牛顿迭代总次数：" << stepNum<<endl;
+for (int i = 1; i <= number; i++) {
+    cout << nodeValue[i] << "   ";
+}
+
+}
+else if (choose == 6) {
+
+
+
+
+//----------------------------P_Tran-----------------------------------------------------------
+
+//加入电容，改变电压值
+cout << endl << endl << "----------------Using P-Tran Method to Solve Circuit Equations--------------------------" << endl << endl;
+
+outfile.open("ptran.txt", ios::out);
+int number = 0;
+isTran = 1;      //--------------------
+isChangVsoure = 1;
+vsourChangIndex = 0.1;
+
+cout << "please input data numbers:" << endl;
+cin >> number;
+for (int i = 1; i <= number; i++) {
+    nodeValue[i] = 0.0;
+}
+
+
+
+double accurateValue = 0.0;
+
+cout << "please input required accuracy:" << endl;
+cin >> accurateValue;
+
+    //for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
+    while (true) {
+
+        stepNum++;
+        nodePtr = nodeList.getNode(0);
+        while (nodePtr != NULL) {
+            if (nodePtr->getNameNum() != datum) {
+                nodePtr->printNodalMat(datum, lastnode, result);
+            }
+            nodePtr = nodePtr->getNext();
         }
 
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            compPtr->specialPrintMat(datum, result);
+            compPtr = compPtr->getNext();
+        }
+
+
+        //~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+        if (eqType != Modified) {
+            compPtr = compList.getComp(0);
+            while (compPtr != NULL) {
+                compPtr->printSuperNodeMat(datum, lastnode, result);
+                compPtr = compPtr->getNext();
+            }
+        }
+
+
+        // go down the node list and give additional MNA equations
+        if (eqType == Modified) {
+            nodePtr = nodeList.getNode(0);
+            while (nodePtr != NULL) {
+                if (nodePtr->getNameNum() != datum)
+                    nodePtr->printMNAMat(datum, lastnode, result);
+                nodePtr = nodePtr->getNext();
+            }
+        }
+
+        //求jac矩阵
+
+        nodePtr1 = nodeList.getNode(0);
+        while (nodePtr1 != NULL) {
+            if (nodePtr1->getNameNum() != datum) {
+                nodePtr2 = nodeList.getNode(0);
+                while (nodePtr2 != NULL) {
+                    if (nodePtr2->getNameNum() != datum) {
+                        nodePtr1->printJacMat(datum, nodePtr2, lastnode, eqType, jacMat);
+                    }
+                    nodePtr2 = nodePtr2->getNext();
+                }
+            }
+            nodePtr1 = nodePtr1->getNext();
+        }
+
+        // go down the component list and give equations for all sources
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            nodePtr2 = nodeList.getNode(0);
+            compPtr2 = compList.getComp(0);
+            while (nodePtr2 != NULL) {
+                if (nodePtr2->getNameNum() != datum) {
+                    compPtr->specialPrintJacMat(datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA, jacMat); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+                }
+                nodePtr2 = nodePtr2->getNext();
+            }
+            specPrintJacMNA = 0;
+            compPtr = compPtr->getNext();
+        }
+
+
+
+
+        // print the Jacobians for the additional MNA equations
+        if (eqType == Modified) {
+            nodePtr1 = nodeList.getNode(0);
+            while (nodePtr1 != NULL) {
+                if (nodePtr1->getNameNum() != datum) {
+                    nodePtr2 = nodeList.getNode(0);
+                    while (nodePtr2 != NULL) {
+                        if (nodePtr2->getNameNum() != datum)
+                            nodePtr1->printJacMNAMat(datum, nodePtr2, lastnode, jacMat);
+                        nodePtr2 = nodePtr2->getNext();
+                    }
+                }
+                nodePtr1 = nodePtr1->getNext();
+            }
+        }
+
+        
+
+        NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+        //cout << "迭代次数：" << count << endl;
+
+        
+        if (isClose(preU, nodeValue, number, 1e-9)) {
+            break;
+        }
+
+        if (isClose(preU, nodeValue, number, 1e-3)) {
+            outfile << "the value of Vsour:" << vsourChangIndex << "*Value" << endl;
+            for (int i = 1; i <= number; i++) {
+                outfile << "x" << i << "=" << nodeValue[i] << endl;
+            }
+
+            if (vsourChangIndex < 1.0)
+                vsourChangIndex += 0.1;
+            else
+                vsourChangIndex = 1.0;
+
+        }
+
+        if ( count <= 4) {
+            stepSize = stepSize * 2;
+            for (int i = 1; i <= number; i++) {
+                preU[i] = nodeValue[i];
+            }
+           cout << "此时步长为：" << stepSize/2<< "   迭代次数为：" << count << "  步长更新为：" << stepSize<<endl;
+        }
+        else if (11 < count) {
+            stepSize = stepSize / 8;
+            
+            
+          cout << "此时步长为：" << stepSize*8 << "   迭代次数为：" << count << "  步长更新为：" << stepSize  << endl;
+
+        }
+        else {
+            for (int i = 1; i <= number; i++) {
+                preU[i] = nodeValue[i];
+            }
+            cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长不变" << endl;
+        }
+
+        for (int i = 1; i <= number; i++) {
+            nodeValue[i] = 0.0;
+        }
+
+        for (int i = 0; i < number; i++) {
+            for (int j = 0; j < number; j++) {
+                jacMat[i + 1][j + 1] = 0.0;
+            }
+            result[i + 1] = 0.0;
+        }
+
+
+    }
+
+
+
+outfile.close();
+for (int i = 1; i <= number; i++) {
+    cout << nodeValue[i] << "   ";
+ }
+
+}
+else if (choose == 7) {
+
+//----------------------------P_Tran-----------------------------------------------------------
+
+//加入电容，改变电压值
+cout << endl << endl << "----------------Using P-Tran Method to Solve Circuit Equations--------------------------" << endl << endl;
+
+outfile.open("ptran.txt", ios::out);
+int number = 0;
+isTran = 1;      //--------------------
+isChangVsoure = 1;
+vsourChangIndex = 0.0;
+
+
+cout << "please input data numbers:" << endl;
+cin >> number;
+for (int i = 1; i <= number; i++) {
+    nodeValue[i] = 0.0;
+}
+
+double accurateValue = 0.0;
+
+cout << "please input required accuracy:" << endl;
+cin >> accurateValue;
+
+//for (double i = stepSize; i < stopTime + stepSize; i = i + stepSize) {
+while (true) {
+
+    
+
+    endTimeFlag += stepSize;
+    if (endTimeFlag > stopTime)
+        // throw runtime_error("timeout");
+        break;
+    if (stepSize < 1e-6)
+        throw runtime_error("stepSize is too small!");
+
+    if (endTimeFlag / 400.0 < 1) {
+        vsourChangIndex = endTimeFlag / 400.0;
+       
+    }
+    else {
+        vsourChangIndex = 1.0;
+    }
+    nodePtr = nodeList.getNode(0);
+    while (nodePtr != NULL) {
+        if (nodePtr->getNameNum() != datum) {
+            nodePtr->printNodalMat(datum, lastnode, result);
+        }
+        nodePtr = nodePtr->getNext();
+    }
+
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        compPtr->specialPrintMat(datum, result);
         compPtr = compPtr->getNext();
     }
 
 
+    //~> go down the component list and give supernode equations for all float sources (Nodal Analysis)
+    if (eqType != Modified) {
+        compPtr = compList.getComp(0);
+        while (compPtr != NULL) {
+            compPtr->printSuperNodeMat(datum, lastnode, result);
+            compPtr = compPtr->getNext();
+        }
+    }
+
+
+    // go down the node list and give additional MNA equations
+    if (eqType == Modified) {
+        nodePtr = nodeList.getNode(0);
+        while (nodePtr != NULL) {
+            if (nodePtr->getNameNum() != datum)
+                nodePtr->printMNAMat(datum, lastnode, result);
+            nodePtr = nodePtr->getNext();
+        }
+    }
+
+    //求jac矩阵
+
+    nodePtr1 = nodeList.getNode(0);
+    while (nodePtr1 != NULL) {
+        if (nodePtr1->getNameNum() != datum) {
+            nodePtr2 = nodeList.getNode(0);
+            while (nodePtr2 != NULL) {
+                if (nodePtr2->getNameNum() != datum) {
+                    nodePtr1->printJacMat(datum, nodePtr2, lastnode, eqType, jacMat);
+                }
+                nodePtr2 = nodePtr2->getNext();
+            }
+        }
+        nodePtr1 = nodePtr1->getNext();
+    }
+
+    // go down the component list and give equations for all sources
+    compPtr = compList.getComp(0);
+    while (compPtr != NULL) {
+        nodePtr2 = nodeList.getNode(0);
+        compPtr2 = compList.getComp(0);
+        while (nodePtr2 != NULL) {
+            if (nodePtr2->getNameNum() != datum) {
+                compPtr->specialPrintJacMat(datum, nodePtr2, lastnode, eqType, compPtr2, &specPrintJacMNA, jacMat); // ~> specPrintJacMNA is used to verify if the jacobians w.r.t. the Modified equations was already printed to print only once.
+            }
+            nodePtr2 = nodePtr2->getNext();
+        }
+        specPrintJacMNA = 0;
+        compPtr = compPtr->getNext();
+    }
+
+
+
+
+    // print the Jacobians for the additional MNA equations
+    if (eqType == Modified) {
+        nodePtr1 = nodeList.getNode(0);
+        while (nodePtr1 != NULL) {
+            if (nodePtr1->getNameNum() != datum) {
+                nodePtr2 = nodeList.getNode(0);
+                while (nodePtr2 != NULL) {
+                    if (nodePtr2->getNameNum() != datum)
+                        nodePtr1->printJacMNAMat(datum, nodePtr2, lastnode, jacMat);
+                    nodePtr2 = nodePtr2->getNext();
+                }
+            }
+            nodePtr1 = nodePtr1->getNext();
+        }
+    }
+
+
+
+
+
+    NR_Iterations(jacMat, result, minDert, number, count, accurateValue, datum, lastnode);
+    //cout << "迭代次数：" << count << endl;
+    stepNum += count;
+    if (isClose(preU, nodeValue, number, 1e-7)) {
+        break;
+    }
+
+    outfile << "the value of Vsour:" << vsourChangIndex << "*V" << endl;
+    for (int i = 1; i <= number; i++) {
+        outfile << "x" << i << "=" << nodeValue[i] << endl;
+     }
+
+
+    if (count <= 4) {
+        stepSize = stepSize * 2;
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+         cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长更新为：" << stepSize * 2<<endl;
+    }
+    else if (11 < count) {
+        stepNum -= count;
+        endTimeFlag -= stepSize;
+        stepSize = stepSize / 8;
+        for (int i = 1; i <= number; i++) {
+            nodeValue[i] = preU[i];
+        }
+
+          cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长更新为：" << stepSize /8  << endl;
+
+    }
+    else {
+        for (int i = 1; i <= number; i++) {
+            preU[i] = nodeValue[i];
+        }
+         cout << "此时步长为：" << stepSize << "   迭代次数为：" << count << "  步长不变" << endl;
+    }
+
+    for (int i = 1; i <= number; i++) {
+        nodeValue[i] = 0.0;
+    }
+
+    for (int i = 0; i < number; i++) {
+        for (int j = 0; j < number; j++) {
+            jacMat[i + 1][j + 1] = 0.0;
+        }
+        result[i + 1] = 0.0;
+    }
+
+
+
+
 }
 
+
+cout << "共N_R迭代：" << stepNum << "次" << endl;
 outfile.close();
-
+cout << endTimeFlag << endl;
+for (int i = 1; i <= number; i++) {
+    cout << nodeValue[i] << "   ";
 }
-else {
+
+
+
+
+}else {
 cout << "input error!!!" << endl;
 }
 
@@ -1509,14 +2067,41 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
                     , int lastnode, bool Homotopy_New,bool Homotopy, double t) {
 
 
+
     Component* compPtr, * compPtr2;
     Node* nodePtr, * nodePtr1, * nodePtr2;
     int specPrintJacMNA = 0;
     EquaType eqType = Modified;
 
+
+
+    /*
+    cout << "*********************" << endl;
+    for (int i = 1; i <= number; i++) {
+        cout << nodeValue[i] << "\t";
+    }
+    cout << endl;
+    for (int i = 1; i <= number; i++) {
+        cout << result[i] << "\t";
+
+    }
+    cout << endl;
+    cout << "-------------------------" << endl;
+    for (int i = 1; i <= number; i++) {
+        for (int j = 1; j <= number; j++) {
+            cout << jacMat[i][j] << "\t";
+        }
+        cout << endl;
+    }
+    cout << "*********************" << endl;
+    
+    */
+
     double A[30][30], b[30];
     convertArray(jacMat, A, result, b, number);
     Fun(A, minDert, b, number);
+
+    count = 1;
 
     for (int i = 0; i < number; i++) {
         nodeValue[i + 1] = nodeValue[i + 1] + minDert[i];
@@ -1531,9 +2116,9 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
             }
             result[i + 1] = 0.0;
         }
-        count++;
-        if (count > 1000) {
-            cout << "存在一次迭代不能达到精确值！ 此时 t=" <<t<< endl;
+          
+        if (count > 100) {
+            cout << ">>>>>t=" <<t<< endl;
             break;
         }
         nodePtr = nodeList.getNode(0);
@@ -1624,6 +2209,28 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
         }
 
 
+        /*
+        cout << "*********************" << endl;
+        for (int i = 1; i <= number; i++) {
+            cout << nodeValue[i] << "\t";
+        }
+        cout << endl;
+        for (int i = 1; i <= number; i++) {
+            cout << result[i] << "\t";
+
+        }
+        cout << endl;
+        cout << "-------------------------" << endl;
+        for (int i = 1; i <= number; i++) {
+            for (int j = 1; j <= number; j++) {
+                cout << jacMat[i][j] << "\t";
+            }
+            cout << endl;
+        }
+        cout << "*********************" << endl;
+        */
+       
+
         if (Homotopy_New) {
             for (int i = 1; i <= number; i++) {
                 result[i] = result[i] - (1 - t) * initF[i];
@@ -1638,18 +2245,25 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
 
         }
         else if (Homotopy) {
-            int sum = 0;
             for (int i = 1; i <= number; i++) {
-                sum += nodeValue[i];
+
+                result[i] = t * result[i] + (1 - t) * G * (nodeValue[i] - a[i]);
+
             }
 
-            for (int i = 1; i <= number; i++) {
-                result[i] = t * result[i] + (1 - t) * 2 * (sum - number * 0.9);
-            }
+
 
             for (int i = 1; i <= number; i++) {
                 for (int j = 1; j <= number; j++) {
-                    jacMat[i][j] = jacMat[i][j] * t + (1 - t) * 2;
+                    if (i == j) {
+
+                        jacMat[i][j] = jacMat[i][j] * t + (1 - t) * G;
+
+                    }
+                    else {
+                        jacMat[i][j] = jacMat[i][j] * t;
+                    }
+
                 }
             }
             convertArray(jacMat, A, result, b, number);
@@ -1672,6 +2286,10 @@ void NR_Iterations(double jacMat[][30], double result[], double minDert[], int n
 
 
         }
+
+        
+
+        count++;
         
 
     }
@@ -1775,6 +2393,17 @@ bool isAccurate(double minDert[], int num, double acc) {
     }
     return re;
 
+}
+
+
+bool isClose(double A[], double B[], int num, double accurate) {
+    bool re = true;
+    for (int i = 1; i <= num; i++) {
+        if (fabs(A[i] - B[i]) > accurate) {
+            re = false;
+        }
+    }
+    return re;
 }
 
 

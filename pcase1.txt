@@ -16,7 +16,7 @@ re   2  0     100
 vcc  6  0     10
 vin  5  0     1.5
 
-.tran 0.001 0.4
+.tran 0.001 1e+30
 
   .nodeset v(1)=0 v(2)=5 v(3)=5  
 * .nodeset v(1)=5 v(2)=0 v(3)=5

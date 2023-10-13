@@ -17,7 +17,7 @@ const double Q = 1.60E-19;
 
 
 double nodeValue[30] = { 0.0 }, jacMat[30][30] = { 0.0 }, result[30] = { 0.0 }, minDert[30] = { 0.0 }, initF[30] = { 0.0 }, 
-preU[30] = { 0.0 }, stepSize = 0.0, stopTime = 0.0, G = 1e-3, a[30] = {0.5825,0.5862,0.9258,0.5751,0.01,0.8094,0.6088 };
+preU[30] = { 0.0 }, preI[10] = {0.0},stepSize = 0.0, stopTime = 0.0, G = 1e-3, a[30] = {0.0,0.759,0.0540,0.0538,0.7792,0.9448,0.1299,0.5688,0.4694,0.0119,0.337,0.1622,0.7943,0.3112,0.5285,0.1656,0.6020,0.2630,0.6541 }, vsourChangIndex = 0.0, endTimeFlag = 0.0;
 int Vsoure[10][4]={0};    /*  
 						   Vsoure[x][0]; 表示V(x),是否链接两个非零节点
 						   Vsoure[x][1]; 表示V(x),的F(x)是否已经输出一次
@@ -36,8 +36,6 @@ enum TranType { NMOS, PMOS, NPN, PNP };
 enum Flag { UNSET, SET };
 enum Boolean { FALSE, TRUE };
 enum EquaType { Nodal, Modified };
-int mCount = 0, bCount = 0, vSCount = 0, iSCount = 0, rCount = 0, iCount = 0, dCount = 0, cCount = 0, isTran = 0, stepNum = 0;
-const int NameLength = 80, BufLength = 300, NA = -1;
 
 class Component;
 class ComponentHead;
@@ -45,6 +43,10 @@ class Node;
 class NodeHead;
 class Model;
 class ModelHead;
+
+int mCount = 0, bCount = 0, vSCount = 0, iSCount = 0, rCount = 0, iCount = 0, dCount = 0, cCount = 0, 
+		isTran = 0, stepNum = 0,isChangVsoure = 0;
+const int NameLength = 80, BufLength = 300, NA = -1;
 
 struct Connectors {
 	Flag flag;
@@ -182,6 +184,7 @@ public:
 private:
 	Model* modelList;
 };
+
 
 
 
@@ -458,6 +461,7 @@ void Component::print(int nodeNum, ofstream& outFile, int datum, int lastnode) {
 		break;
 
 	case VSource:
+		
 		if (con0.node->getNum() == nodeNum)
 			outFile << " X(" << lastnode + compNum << ")";
 		else if (con1.node->getNum() == nodeNum)
@@ -538,6 +542,7 @@ void Component::specialPrint(ofstream& outFile, int datum) {
 			outFile << "-X(" << con1.node->getNameNum() << ')';
 		outFile << ") -" << value << ';' << endl;
 	}
+	/*
 	else if (type == Inductor) {
 		outFile << endl << "F(I" << compNum << ") = ";
 		outFile << " (";
@@ -547,6 +552,8 @@ void Component::specialPrint(ofstream& outFile, int datum) {
 			outFile << "-X(" << con1.node->getNameNum() << ')';
 		outFile << ") " << ';' << endl;
 	}
+	*/
+	
 }
 
 /// ~> POSSIBLE DEBUG: insert a condition with relation to the type of equation: MNA. i.e. if(typeEq = MNA) ...
@@ -599,6 +606,10 @@ void Component::specialPrintJac(ofstream& outFile, int datum, Node* wrt /**/, in
 void Component::printVal(ofstream& outFile) {
 	switch (type) {
 	case Resistor:
+		outFile << name << " = " << value << ';' << endl;
+		break;
+
+	case Inductor:
 		outFile << name << " = " << value << ';' << endl;
 		break;
 	case VSource:
@@ -1107,9 +1118,7 @@ void Component::printJac(int nodeNum, ofstream& outFile, int datum, int wrt, boo
 		break;
 
 	case Inductor:
-		cerr << "This section is not completed" << endl
-			<< "PROGRAM ENDED ABNORMALLY!" << endl;
-		exit(0);
+		
 		break;
 	};
 	return;
@@ -1260,7 +1269,8 @@ void Node::printMNA(ofstream& outFile, int datum, int lastnode) {
 				if (Vsoure[conPtr->comp->getcompNum()][1] == 0) {
 					print = 1;
 					outFile << endl;
-					outFile << "F(" << Vsoure[conPtr->comp->getcompNum()][2] << ")=";
+					outFile << "F(" << lastnode + conPtr->comp->getcompNum() << ")=";
+					
 					Vsoure[conPtr->comp->getcompNum()][1] = 1;
 					
 					
@@ -1271,7 +1281,7 @@ void Node::printMNA(ofstream& outFile, int datum, int lastnode) {
 				else {
 					print = 1;
 					outFile << endl;
-					outFile << "F(" << lastnode + conPtr->comp->getcompNum() << ")=";
+					outFile << "F(" << Vsoure[conPtr->comp->getcompNum()][2] << ")=";
 					Vsoure[conPtr->comp->getcompNum()][1] = 0;
 				}
 			}
@@ -2052,16 +2062,40 @@ void Component::printMat(int nodeNum, int datum, int lastnode, double result[], 
 			break;
 		}
 		else {
-			result[nameNum] = result[nameNum] + value / stepSize * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()] - preU[con0.node->getNameNum()]);
+			if (con0.node->getNum() == nodeNum) {
+				
+				result[nameNum] = result[nameNum] + value / stepSize * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()] - preU[con0.node->getNameNum()]);
+	
+				
+			}
+			if (con1.node->getNum() == nodeNum) {
+				result[nameNum] = result[nameNum] - value / stepSize * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()] - preU[con0.node->getNameNum()]);
+				
+			}
 			break;
 		}
 
 	case Inductor:
-		if (con0.node->getNum() == nodeNum) {}
-			
-		else if (con1.node->getNum() == nodeNum)
-		{}
+		if (!isTran) {
 			break;
+		}
+		else {
+
+			if (con0.node->getNum() == nodeNum) {
+				
+				result[nameNum] = result[nameNum] - preI[compNum] + stepSize / value * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]);
+			
+			
+			}
+			if (con1.node->getNum() == nodeNum) {
+			
+				result[nameNum] = result[nameNum] + preI[compNum ] - stepSize / value * (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]);
+				
+				
+			}
+			break;
+		}
+		
 	};
 	return;
 }
@@ -2074,14 +2108,27 @@ void Component::specialPrintMat(int datum, double result[]) {
 		else eqnum = con0.node->getNameNum();
 
 
-		if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
-			result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]) - value;
+		if (!isChangVsoure) {
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]) - value;
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()]) - value;
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[eqnum] = result[eqnum] + (-nodeValue[con1.node->getNameNum()]) - value;
+			}
 		}
-		if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
-			result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()]) - value;
-		}
-		if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
-			result[eqnum] = result[eqnum] + (-nodeValue[con1.node->getNameNum()]) - value;
+		else {
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() != datum) {
+				result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()] - nodeValue[con1.node->getNameNum()]) - value*vsourChangIndex;
+			}
+			if (con0.node->getNameNum() != datum && con1.node->getNameNum() == datum) {
+				result[eqnum] = result[eqnum] + (nodeValue[con0.node->getNameNum()]) - value* vsourChangIndex;
+			}
+			if (con0.node->getNameNum() == datum && con1.node->getNameNum() != datum) {
+				result[eqnum] = result[eqnum] + (-nodeValue[con1.node->getNameNum()]) - value* vsourChangIndex;
+			}
 		}
 	}
 	else if (type == Inductor) {
@@ -2145,17 +2192,18 @@ void Node::printMNAMat(int datum, int lastnode, double result[]) {
 
 			}
 			else {
-				if (Vsoure[conPtr->comp->getcompNum()][1] == 0) {
+				if (conPtr->comp->getConVal(0) == nameNum) {
 					print = 1;
-					numIndex = Vsoure[conPtr->comp->getcompNum()][2];
-					Vsoure[conPtr->comp->getcompNum()][1] = 1;
+					numIndex = lastnode + conPtr->comp->getcompNum();
+
 					
 				}
 				else {
 					print = 1;
-					numIndex = lastnode + conPtr->comp->getcompNum();
-					Vsoure[conPtr->comp->getcompNum()][1] = 0;
+					numIndex = conPtr->comp->getConVal(1);
+					
 				}
+
 			}
 
 		}
@@ -2201,20 +2249,8 @@ void Node::printJacMat(int datum, Node* wrt, int lastnode, EquaType eqType, doub
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
-				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
-					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
-						jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
-						
-						Vsoure[conPtr->comp->getcompNum()][3] = 1;
-						
-					}
-					else {
-						Vsoure[conPtr->comp->getcompNum()][3] = 0;
-					}
-				}
-				else {
+				
 					jacMat[nameNum][lastnode + conPtr->comp->getcompNum()] = 0;
-				}
 				
 			}
 			conPtr = conPtr->next;
@@ -2721,18 +2757,51 @@ void Component::printJacMat(int nodeNum, int datum, int wrt, bool MNAflag, doubl
 			break;
 		}
 		else {
-			if (con0.node->getNameNum() == wrt) {
-				jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + value / stepSize;
+			if (con0.node->getNum() == nodeNum) {
+				if (con0.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + value / stepSize;
+				}
+				else if(con1.node->getNameNum() == wrt){
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - value / stepSize;
+				}
 			}
+			if (con1.node->getNum() == nodeNum) {
+				if (con0.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - value / stepSize;
+				}
+				else if (con1.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + value / stepSize;
+				}
+			}
+			
 			break;
 		}
 		
 
 	case Inductor:
-		cerr << "This section is not completed" << endl
-			<< "PROGRAM ENDED ABNORMALLY!" << endl;
-		exit(0);
-		break;
+		if (!isTran) {
+			jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + 0;
+			break;
+		}
+		else {
+			if (con0.node->getNum() == nodeNum) {
+				if (con0.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + stepSize / value;
+				}
+				else if (con1.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - stepSize / value;
+				}
+			}
+			if (con1.node->getNum() == nodeNum) {
+				if (con0.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] - stepSize / value;
+				}
+				else if (con1.node->getNameNum() == wrt) {
+					jacMat[fristIndex][scendIndex] = jacMat[fristIndex][scendIndex] + stepSize / value;
+				}
+			}
+			break;
+		}
 	};
 	return;
 }
@@ -2792,27 +2861,29 @@ void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30
 	while (conPtr != NULL) {
 		if (conPtr->comp->getType() == VSource) {
 
+			val = conPtr->comp->getcompNum();
+
 			if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
 				if (conPtr->comp->getConVal(0) == nameNum) {
 					print = 1;
-					val = conPtr->comp->getcompNum();
-					fristIndex = nameNum;
-					scendIndex = wrt->getNameNum();
-					tempVal = nameNum;
-				}
-				else {
-
-					print = 1;
-
-					val = conPtr->comp->getcompNum();
+					
 					fristIndex = lastnode + val;
 					scendIndex = wrt->getNameNum();
 					tempVal = lastnode + val;
 				}
+				if (conPtr->comp->getConVal(1) == nameNum) {
+
+					print = 1;
+
+					
+					fristIndex = nameNum;
+					scendIndex = wrt->getNameNum();
+					tempVal = nameNum;
+				}
 			}
 			else {
 				print = 1;
-				val = conPtr->comp->getcompNum();
+				
 				fristIndex = lastnode + val;
 				scendIndex = wrt->getNameNum();
 				tempVal = lastnode + val;
@@ -2825,37 +2896,35 @@ void Node::printJacMNAMat(int datum, Node* wrt, int lastnode, double jacMat[][30
 	if (print) {
 		conPtr = conList;
 		while (conPtr->next != NULL) {
-			conPtr->comp->printJacMat(nodeNum,datum, wrt->getNameNum(), MNAflagTRUE, jacMat, fristIndex, scendIndex);
+			conPtr->comp->printJacMat(nodeNum, datum, wrt->getNameNum(), MNAflagTRUE, jacMat, fristIndex, scendIndex);
 			conPtr = conPtr->next;
 		}
 		conPtr->comp->printJacMat(nodeNum, datum, wrt->getNameNum(), MNAflagTRUE, jacMat, fristIndex, scendIndex);
+
+			
+		
 		conPtr = wrt->conList;
 		while (conPtr != NULL) {
 			if (conPtr->comp->getType() == VSource) {
-				if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
-					if (Vsoure[conPtr->comp->getcompNum()][3] == 0) {
-						if (conPtr->comp->getcompNum() == val)
+				if (conPtr->comp->getcompNum() == val) {//判断是否为同一个电压源，
+					if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
+						
+						  
+						if (conPtr->comp->getConVal(0) == nameNum) {
 							jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 1;
-						else
-							jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 0;
-						if (Vsoure[conPtr->comp->getcompNum()][0] == 1) {
-							Vsoure[conPtr->comp->getcompNum()][3] = 1;
-
-
 						}
-
+						if(conPtr->comp->getConVal(1)==nameNum) {
+							jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = -1;
+						}
 					}
 					else {
-						Vsoure[conPtr->comp->getcompNum()][3] = 0;
-
+						jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 1;
 					}
 				}
 				else {
-					if (conPtr->comp->getcompNum() == val)
-						jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 1;
-					else
-						jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 0;
+					jacMat[tempVal][lastnode + conPtr->comp->getcompNum()] = 0;
 				}
+				
 				
 			}
 			conPtr = conPtr->next;

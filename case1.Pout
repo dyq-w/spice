@@ -64,8 +64,6 @@ JAC(2, 1) =  ( -  q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 + 0 ;
 
 JAC(2, 5) =  ( - q1IS * q1N / q1BF)*(1 + q1BF)*(exp(-q1N*(X(2)-X(5)))) + (q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 + 0 ;
 
-JAC(2, 8) = 0; 
-
 JAC(2, 2) =  (q1IS * q1N / q1BF)*(1 + q1BF)*(exp(-q1N*(X(2) - X(5)))) + (q2IS * q2N / q2BF)*(1 + q2BF)*(exp(-q2N*(X(2) - X(4)))) + 1/re ;
 
 JAC(2, 3) =  0 + ( -  q2IS * q2N)*(exp(-q2N*(X(3) - X(4)))) + 0 ;
@@ -73,8 +71,6 @@ JAC(2, 3) =  0 + ( -  q2IS * q2N)*(exp(-q2N*(X(3) - X(4)))) + 0 ;
 JAC(2, 4) =  0 + ( - q2IS * q2N / q2BF)*(1 + q2BF)*(exp(-q2N*(X(2)-X(4)))) + (q2IS * q2N)*(exp(-q2N*(X(3) - X(4)))) + 0 ;
 
 JAC(2, 6) =  0 + 0 + 0 ;
-
-JAC(2, 7) = 0; 
 
 JAC(3, 1) =  0 + 0 ;
 
@@ -96,8 +92,6 @@ JAC(4, 1) =  0 + (-1/r3) ;
 
 JAC(4, 5) =  0 + 0 ;
 
-JAC(4, 8) = 0; 
-
 JAC(4, 2) =  (q2IS * q2N)*(exp(-q2N*(X(2) - X(4)))) - (q2IS * q2N / q2BF)*(1 + q2BF)*(exp(-q2N*(X(2) - X(4)))) + 0 ;
 
 JAC(4, 3) =  ( - q2IS * q2N / q2BR)*(1 + q2BR)*(exp(-q2N*(X(3) - X(4)))) + (q2IS * q2N)*(exp(-q2N*(X(3) - X(4)))) + 0 ;
@@ -105,8 +99,6 @@ JAC(4, 3) =  ( - q2IS * q2N / q2BR)*(1 + q2BR)*(exp(-q2N*(X(3) - X(4)))) + (q2IS
 JAC(4, 4) =  ( - q2IS * q2N)*(exp(-q2N*(X(2) - X(4)))) + (q2IS * q2N / q2BR )*(1 + q2BR )*(exp(-q2N*(X(3)-X(4)))) + (q2IS * q2N / q2BF )*(1 + q2BF )*(exp(-q2N*(X(2) - X(4)))) - (q2IS * q2N)*(exp(-q2N*(X(3) - X(4)))) + 1/r3 ;
 
 JAC(4, 6) =  0 + 0 ;
-
-JAC(4, 7) = 0; 
 
 JAC(6, 1) = 0;
 
@@ -140,34 +132,30 @@ JAC(5, 4) = 0;
 
 JAC(5, 6) = 0;
 
-JAC(8, 1) =  ( - q1IS * q1N / q1BR)*(1 + q1BR)*(exp(-q1N*(X(1) - X(5)))) + (q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 ;
+JAC(5, 1) =  ( - q1IS * q1N / q1BR)*(1 + q1BR)*(exp(-q1N*(X(1) - X(5)))) + (q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 ;
 
-JAC(8, 5) =  ( - q1IS * q1N)*(exp(-q1N*(X(2) - X(5)))) + (q1IS * q1N / q1BR )*(1 + q1BR )*(exp(-q1N*(X(1)-X(5)))) + (q1IS * q1N / q1BF )*(1 + q1BF )*(exp(-q1N*(X(2) - X(5)))) - (q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 ;
+JAC(5, 5) =  ( - q1IS * q1N)*(exp(-q1N*(X(2) - X(5)))) + (q1IS * q1N / q1BR )*(1 + q1BR )*(exp(-q1N*(X(1)-X(5)))) + (q1IS * q1N / q1BF )*(1 + q1BF )*(exp(-q1N*(X(2) - X(5)))) - (q1IS * q1N)*(exp(-q1N*(X(1) - X(5)))) + 0 ;
 
-JAC(8, 8) = 1;
+JAC(5, 8) = 1;
 
-JAC(8, 2) =  (q1IS * q1N)*(exp(-q1N*(X(2) - X(5)))) - (q1IS * q1N / q1BF)*(1 + q1BF)*(exp(-q1N*(X(2) - X(5)))) + 0 ;
+JAC(5, 2) =  (q1IS * q1N)*(exp(-q1N*(X(2) - X(5)))) - (q1IS * q1N / q1BF)*(1 + q1BF)*(exp(-q1N*(X(2) - X(5)))) + 0 ;
 
-JAC(8, 3) =  0 + 0 ;
+JAC(5, 3) =  0 + 0 ;
 
-JAC(8, 4) =  0 + 0 ;
+JAC(5, 4) =  0 + 0 ;
 
-JAC(8, 6) =  0 + 0 ;
+JAC(5, 6) =  0 + 0 ;
 
-JAC(8, 7) = 0;
+JAC(5, 7) = 0;
 
-JAC(7, 1) =  (-1/rc1) + 0 + 0 ;
+JAC(6, 1) =  (-1/rc1) + 0 + 0 ;
 
-JAC(7, 5) =  0 + 0 + 0 ;
+JAC(6, 5) =  0 + 0 + 0 ;
 
-JAC(7, 8) = 0;
+JAC(6, 2) =  0 + 0 + 0 ;
 
-JAC(7, 2) =  0 + 0 + 0 ;
+JAC(6, 3) =  0 + (-1/rc2) + 0 ;
 
-JAC(7, 3) =  0 + (-1/rc2) + 0 ;
+JAC(6, 4) =  0 + 0 + 0 ;
 
-JAC(7, 4) =  0 + 0 + 0 ;
-
-JAC(7, 6) =  1/rc1 + 1/rc2 + 0 ;
-
-JAC(7, 7) = 1;
+JAC(6, 6) =  1/rc1 + 1/rc2 + 0 ;
